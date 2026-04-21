@@ -1,9 +1,46 @@
 services:
   db:
-    
+    image: postgres:17 # Image permettant de créer le conteneur
+    restart: unless-stopped # Redémarre automatiquement mon service en cas de crash (sauf si je l'ai éteint manuellement)
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s # Fréquence des vérifications
+      timeout: 5s # Délai max pour qu'une vérification réponde
+      retries: 5 # Nombre d'échecs consécutifs avant de passer en "unhealthy"
+      start_period: 20s # Délai de grâce au démarrage (pas de pénalité si le check échoue)
   api:
-    context: ./apps/api
-    dockerfile: ../../docker/api.Dockerfile
+    build:
+      context: ./src/api
+      dockerfile: api.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      PORT: 3000
+      CORS_ORIGIN: http://localhost:80
+    ports:
+      - "3001:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
   client:
-    context: ./apps/client
-    dockerfile: ../../docker/client.Dockerfile
+    build:
+      context: ./src/client
+      dockerfile: client.Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    volumes : 
+    - /src/node_modules # Evite de monter le dossier node_modules du host dans le conteneur (projet React) pour éviter les conflits de dépendances entre le host et le conteneur
+# Persistance des données 
+volumes:
+  postgres_data:

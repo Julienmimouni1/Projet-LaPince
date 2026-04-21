@@ -24,9 +24,9 @@ npx prisma init --datasource-provider postgresql
 
 FRONTEND
 
-npm create vite@latest apps/front -- --template react-ts
+npm create vite@latest api/client -- --template react-ts
 
-Dans le dossier front
+Dans le dossier client
 
 npm install lucide-react react-router-dom @tanstack/react-query
 npm install -D tailwindcss @tailwindcss/vite
