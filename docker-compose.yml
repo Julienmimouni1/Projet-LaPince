@@ -36,7 +36,7 @@ services:
       dockerfile: client.Dockerfile
     restart: unless-stopped
     ports:
-      - "80:80"
+      -  ${CLIENT_PORT:-5173}
     depends_on:
       - api
     volumes : 
