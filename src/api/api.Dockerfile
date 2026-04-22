@@ -23,6 +23,7 @@ COPY ./ ./
 
 # Générer le client prisma capable de se connecter à la BDD
 RUN npm run prisma:generate
+
 # CMD npx prisma migrate deploy && npm run start
 
 # # Créer le dossier dist contenant le code JS compilé que l'on exécutera

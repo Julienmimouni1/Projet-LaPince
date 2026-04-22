@@ -10,7 +10,8 @@
     "test": "vitest",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "docker:start": "prisma migrate deploy && prisma db seed && node dist/index.js"
   },
   "keywords": [],
   "author": "",
