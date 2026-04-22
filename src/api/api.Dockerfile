@@ -10,6 +10,8 @@ WORKDIR /app
 # On copie le package.json dans le futur conteneur
 COPY package*.json ./
 
+RUN apt-get update -y && apt-get install -y openssl
+
 # On installe les dépendances de Node
 # RUN = commande que l'on lance à la construction de l'IMAGE
 RUN npm install 

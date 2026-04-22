@@ -45,21 +45,19 @@ services:
     volumes:
       - /src/node_modules
 
-
   studio:
-    image: node:20-slim
-    working_dir: /app 
+    image: node:22-slim          # même version que l'api
+    working_dir: /app/src/api
     volumes:
-      - .:/app # Monte le répertoire dans le conteneur
+      - .:/app
     environment:
-      NODE_ENV: development
       DATABASE_URL: ${DATABASE_URL}
     ports:
-      -"5555:5555" #Expose l'interface de Prisma Studio sur le port 5555
-    command: npx prisma studio
+      - "5555:5555"
+    command: npx --yes prisma studio --port 5555 --browser none
     depends_on:
-      - db:
-          condition: service_healthy
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
