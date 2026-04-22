@@ -45,10 +45,7 @@ services:
     volumes:
       - /src/node_modules
 
-volumes:
-  postgres_data:
 
-  
   studio:
     image: node:20-slim
     working_dir: /app 
@@ -63,3 +60,6 @@ volumes:
     depends_on:
       - db:
           condition: service_healthy
+
+volumes:
+  postgres_data:
