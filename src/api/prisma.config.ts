@@ -8,6 +8,7 @@ export default defineConfig({
     seed: "node ./prisma/seed.ts"
   },
   datasource: {
-    url: process.env.DATABASE_URL as string,
-  },
+  url: process.env.DATABASE_URL!,
+},
+
 });
