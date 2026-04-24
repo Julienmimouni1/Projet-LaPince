@@ -19,7 +19,7 @@ interface RegisterFormProps {
 // au lieu d'écrire props.onSubmit partout dans le composant,
 // on extrait directement onSubmit depuis l'objet props.
 // ": RegisterFormProps" dit à TypeScript que les props doivent respecter l'interface qu'on vient de définir au-dessus.
-export default function RegisterForm({ onSubmit }: RegisterFormProps) {
+export default function RegisterForm({ onSubmit, isLoading, error }: RegisterFormProps) {
   return (
     <form onSubmit={(e) => {
       e.preventDefault();
@@ -73,6 +73,8 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
       </div>
 
       <button type="submit">Créer mon compte</button>
+      {isLoading && <p>Chargement...</p>} // Affiche "Chargement..." pendant que l'appel API est en cours
+      {error && <p style={{ color: 'red' }}>{error.message}</p>} // Affiche le message d'erreur en rouge si une erreur est présente
     </form>
   )
 }
