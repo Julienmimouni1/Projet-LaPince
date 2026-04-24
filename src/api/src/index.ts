@@ -2,10 +2,11 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import authRouter from "../routes/auth.routes.js";
 
 // Créer une app Express
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT) || 3007;
 
 // Sécuriser les headers HTTP
 app.use(helmet());
@@ -20,6 +21,8 @@ app.use(express.json())
 //Middleware : Analyse les cookies de la requête pour extraire les tokens d'authentification (JWT) et les préférences utilisateur.
 app.use(cookieParser());
 
+
+app.use("/auth", authRouter);
 
 app.get('/', (req, res) => {
     res.json("Hello")
