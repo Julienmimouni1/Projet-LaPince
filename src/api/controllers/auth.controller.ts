@@ -13,7 +13,7 @@ export async function register(req: Request, res: Response) {
     return;
   }
 
-  const { first_name, last_name, email, password } = result.data;
+  const { first_name, last_name, email, password, photo } = result.data;
 
 
   // 2. Vérifier que l'email n'existe pas déjà
@@ -30,12 +30,13 @@ export async function register(req: Request, res: Response) {
   // 4. Créer l'utilisateur en base
 
   const user = await prisma.user.create({
-    data: { first_name, last_name, email, password: hashedPassword },
+    data: { first_name, last_name, email, password: hashedPassword, photo },
     select: {
       id: true,
       first_name: true,
       last_name: true,
       email: true,
+      photo: true,
       createdAt: true,
       // password: false  ← on n'expose pas le hash dans la réponse
     },
