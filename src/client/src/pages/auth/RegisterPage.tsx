@@ -144,7 +144,7 @@ export default function RegisterPage() {
         className="hidden md:block absolute top-[50%] left-[5%] z-40"
         aria-hidden="false"
       >
-        <p className="text-[25px] font-bold italic leading-tight">
+        <p className="text-[25px] font-bold leading-tight">
           Créez votre compte Gratuit,
           <br />
           sans connexion bancaire,

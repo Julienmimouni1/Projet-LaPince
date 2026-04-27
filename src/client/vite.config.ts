@@ -8,4 +8,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    host: true,  // Écoute sur 0.0.0.0 — indispensable pour être accessible depuis l'hôte via Docker
+    watch: {
+      usePolling: true,  // Nécessaire sur Windows : Docker ne propage pas les événements inotify natifs
+    },
+  },
 })
