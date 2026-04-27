@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import argon2 from "argon2";
 import { config } from "../config.ts";
+import type { Token, User } from "../models/index.ts";
 import { prisma } from "../lib/prisma.js";
 import {
   BadRequestError,
@@ -100,12 +101,12 @@ res.json({
 
 
 async function replaceRefreshTokenInDatabase(refreshToken: Token, user: User) {
-  await prisma.refreshToken.deleteMany({ where: { user_id: user.id } });
+  await prisma.refreshToken.deleteMany({ where: { userId: user.id } });
 
   await prisma.refreshToken.create({
     data: {
       token: refreshToken.token,
-      user_id: user.id,
+      userId: user.id,
       issued_at: new Date(),
       expires_at: new Date(new Date().getTime() + refreshToken.expiresIn),
     },

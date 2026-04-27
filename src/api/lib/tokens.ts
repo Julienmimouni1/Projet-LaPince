@@ -5,7 +5,7 @@ import type { User } from "@prisma/client";
 export function generateAuthTokens(user: User) {
   const payload = {
     userId: user.id,
-    role: user.role,
+    email: user.email,
   };
 
   const accessToken = jwt.sign(payload, config.jwtSecret, {

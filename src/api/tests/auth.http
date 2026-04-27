@@ -53,3 +53,39 @@ Content-Type: application/json
   "email": "incomplet@example.com",
   "password": "motdepasse123"
 }
+
+### 6. Connexion valide
+POST {{baseUrl}}/auth/login
+Content-Type: application/json  
+
+{
+  "email": "pierre@example.com",
+  "password": "Pierre123!motdepasse"
+}
+
+### 7. Email non trouvé → 401
+POST {{baseUrl}}/auth/login
+Content-Type: application/json  
+
+{
+  "email": "jean@example.com",
+  "password": "testMotdepasse123"
+}
+
+### 8. Mot de passe incorrect → 401
+POST {{baseUrl}}/auth/login
+Content-Type: application/json  
+
+{
+  "email": "pierre@example.com",
+  "password": "mauvaismotdepasse"
+}
+
+### 9. Champs manquants → 400
+POST {{baseUrl}}/auth/login
+Content-Type: application/json  
+
+{
+  "email": "pierre@example.com"
+}   
+

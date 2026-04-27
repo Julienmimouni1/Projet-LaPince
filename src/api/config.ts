@@ -7,7 +7,7 @@ if (!process.env.ALLOWED_ORIGINS) {
 }
 
 export const config = {
-  port: parseInt(process.env.PORT || "3000"),
+  port: parseInt(process.env.PORT || "3007"),
   allowedOrigins: process.env.ALLOWED_ORIGINS.split(","),
   isProd: process.env.NODE_ENV === "production" || false,
   jwtSecret: process.env.JWT_SECRET,
