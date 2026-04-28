@@ -53,6 +53,8 @@ services:
     build:
       context: ./src/client
       dockerfile: client.dev.Dockerfile  # Dockerfile de dev : lance vite --host (hot reload)
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL}  # URL de base de l'API (depuis .env)
     ports:
       - "${CLIENT_LOCAL_PORT}:5173"  # Port 5173 = serveur de dev Vite (pas nginx)
     depends_on:
