@@ -15,4 +15,4 @@ COPY ./ ./
 RUN npx prisma generate
 
 # Lance le serveur en mode watch : tsx recompile à chaque modification de fichier
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npx prisma db push && npx prisma db seed && npm run dev"]
