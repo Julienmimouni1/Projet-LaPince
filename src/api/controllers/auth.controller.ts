@@ -141,7 +141,7 @@ function setRefreshTokenCookie(res: Response, refreshToken: Token) {
     secure: config.isProd, // HTTPS uniquement en production
     sameSite: "none",
     maxAge: refreshToken.expiresIn,
-    path: "/api/auth/refresh",
+    path: "/auth/refresh",
   });
 }
 
