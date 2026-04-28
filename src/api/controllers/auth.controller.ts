@@ -64,9 +64,22 @@ export async function register(req: Request, res: Response) {
 }
 
 export async function login(req: Request, res: Response) {
+  // On lance la validation du body de la requete avec le schéma Zod (safeParseAsync ne plante pas en cas d'erreur)
+  const result = await loginSchema.safeParseAsync(req.body);
+  // Bouncer : si la validation échoue, on renvoie une 400 avec un message d'erreur clair (ex: mot de passe trop court) et le champ concerné
+  if (!result.success) {
+    const firstIssue = result.error.issues[0];
+    res.status(400).json({
+      message: firstIssue?.message ?? "Données invalides",
+      field: firstIssue?.path[0] as string | undefined,
+    });
+    return;
+  }
   
-  // Valider le payload de la requete (nature des valeurs)
-  const { email, password } = await loginSchema.parseAsync(req.body);
+  // Si le bouncer a laissé passer la requete, on valide le payload (nature des valeurs)
+  const { email, password } = result.data;
+
+
 
   // Récupérer l'utilisateur dans la BDD
   const user = await prisma.user.findFirst({ where: { email } });
@@ -133,7 +146,8 @@ function setRefreshTokenCookie(res: Response, refreshToken: Token) {
 }
 
 export async function refresh(req: Request, res: Response) {
-  const refreshToken = req.cookies.refreshToken;
+  // Vérification d'abord dans les cookies, sinon dans le body (au cas où le client ne gère pas les cookies, en dev par exemple)
+  const refreshToken = req.cookies.refreshToken || req.body.refreshToken; 
 
   if (!refreshToken) {
     throw new BadRequestError("Refresh token manquant");

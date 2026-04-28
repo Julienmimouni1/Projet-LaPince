@@ -13,6 +13,6 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.email(),
-  password: z.string()
+  email: z.email("Veuillez fournir une adresse email valide"),
+  password: z.string("Le mot de passe est requis")
 })

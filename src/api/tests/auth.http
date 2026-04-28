@@ -94,7 +94,7 @@ POST {{baseUrl}}/auth/refresh
 Content-Type: application/json
 
 {
-  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzM2NjQ0NSwiZXhwIjoxNzc3OTcxMjQ1LCJhdWQiOiJyZWZyZXNoIn0.MUeAkZHCTv5RXKRCw8ib8gB2rSAqbuE7jP2aDpcCCjg"
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzM3MjAwNCwiZXhwIjoxNzc3OTc2ODA0LCJhdWQiOiJyZWZyZXNoIn0.rMqdAhpkPtpM4e3IkrwscHNQLk4fuRI4rXQqSmWOiQA"
 } 
 
 ### 11. Refresh token invalide → 401
@@ -102,5 +102,5 @@ POST {{baseUrl}}/auth/refresh
 Content-Type: application/json  
 
 {
-  "refresh_token": "tokenInvalide"
+  "refreshToken": "tokenInvalide"
 }
