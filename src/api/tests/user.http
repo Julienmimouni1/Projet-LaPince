@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:3007
 
 ### 1. Récupérer un profil existant → 200
-GET {{baseUrl}}/users/1
+GET {{baseUrl}}/users/12
 
 ### 2. Utilisateur inexistant → 404
 GET {{baseUrl}}/users/9999
