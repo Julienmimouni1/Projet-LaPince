@@ -178,3 +178,13 @@ export async function refresh(req: Request, res: Response) {
   //Renvoyer les nouveaux tokens, le refresh token est dans le cookie, c'est plus sécurisé
   res.json({ accessToken: newTokens.accessToken.token });
 }
+
+
+export async function logoutUser(req: Request, res: Response) {
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken", { path: "/auth/refresh" });
+  if (req.user) {
+    await prisma.refreshToken.deleteMany({ where: { userId: req.user.id } });
+  }
+  res.status(204).end();
+  }

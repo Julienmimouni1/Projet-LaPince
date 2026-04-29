@@ -104,3 +104,8 @@ Content-Type: application/json
 {
   "refreshToken": "tokenInvalide"
 }
+
+### 12. Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzQ2MjE3NCwiZXhwIjoxNzc3NDYzMDc0LCJhdWQiOiJhY2Nlc3MifQ.2HFtc_gJ2gh3RfgvXYIxypN87HchX61wXPSS6bNfnYk
+Content-Type: application/json
