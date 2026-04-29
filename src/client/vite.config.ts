@@ -13,5 +13,12 @@ export default defineConfig({
     watch: {
       usePolling: true,  // Nécessaire sur Windows : Docker ne propage pas les événements inotify natifs
     },
+    proxy: {
+      '/api': {
+        target: 'http://api:3007', // 'api' est le nom du service dans docker-compose, pas besoin de localhost ou d'IP
+        changeOrigin: true, // Modifie l'en-tête Host de la requête pour correspondre à la cible, ce qui est souvent nécessaire pour les API qui vérifient l'origine des requêtes
+        rewrite: (path) => path.replace(/^\/api/, ''),  // Supprime le préfixe /api avant de faire suivre la requête au back-end, car le serveur Express n'a pas de route /api, il a juste /auth, /users, etc.
+      },
+    },
   },
 })
