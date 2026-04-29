@@ -37,3 +37,21 @@ export class ConflictError extends HttpClientError {
     super(message, { status: 409 });
   }
 }
+
+export class InternalServerError extends HttpClientError {
+  constructor(message: string) {
+    super(message, { status: 500 });
+  }
+}
+
+export class ServiceUnavailableError extends HttpClientError {
+  constructor(message: string) {
+    super(message, { status: 503 });
+  }
+}
+
+export class ForbidenError extends HttpClientError {
+  constructor(message: string) {
+    super(message, { status: 403 });
+  }
+}

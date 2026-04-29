@@ -45,5 +45,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "exclude": ["node_modules", "generated", "prisma"]
+  "typeRoots": ["./src/types", "./node_modules/@types"],
+  "exclude": ["node_modules", "generated", "prisma", "prisma.config.ts"]
 }
