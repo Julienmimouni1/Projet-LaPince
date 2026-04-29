@@ -125,16 +125,14 @@ export default function RegisterForm({
         <button
           type="submit"
           disabled={isLoading}
-          aria-busy={isLoading}
-          className="w-fit px-6 py-2 bg-[#002b49] text-white rounded-full font-bold text-sm focus-visible:ring-2 focus-visible:ring-blue-500"
+          className="w-fit px-10 py-2 bg-[#002b49] text-white rounded-full font-bold text-sm shadow-lg 
+             hover:bg-[#003b63] active:scale-95 active:bg-[#001b2e] 
+             transition-all disabled:opacity-50"
         >
           {isLoading ? (
-            <Loader2
-              className="animate-spin mx-auto w-4 h-4"
-              aria-hidden="true"
-            />
+            <Loader2 className="animate-spin w-4 h-4" />
           ) : (
-            "Créer mon compte"
+            "S'inscrire"
           )}
         </button>
       </div>

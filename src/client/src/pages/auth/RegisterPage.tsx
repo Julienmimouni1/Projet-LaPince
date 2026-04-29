@@ -2,35 +2,19 @@ import RegisterForm from "../../components/auth/RegisterForm";
 import { useState } from "react";
 import { registerUser } from "../../services/authApi";
 import type { RegisterFormData, ApiError } from "../../types/auth";
+import Footer from "../../components/Footer/footer";
 
 export default function RegisterPage() {
-  /**
-   * isLoading : indique si une requête API est en cours.
-   * Permet d'afficher un indicateur de chargement ou de désactiver le formulaire.
-   */
   const [isLoading, setIsLoading] = useState(false);
-
-  /**
-   * error : contient l'erreur retournée par l'API.
-   * null signifie qu'aucune erreur n'est présente.
-   */
   const [error, setError] = useState<ApiError | null>(null);
-
-  /**
-   * pour choisir de la photo
-   */
   const [photo, setPhoto] = useState<File | null>(null);
 
-  /**
-   * handleSubmit : gère l'envoi des données du formulaire vers l'API.
-   */
   const handleSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
     setError(null);
-
     try {
       await registerUser(data);
-      alert("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+      alert("Inscription réussie !");
     } catch (err) {
       setError(err as ApiError);
     } finally {
@@ -40,296 +24,141 @@ export default function RegisterPage() {
 
   return (
     <main
-      className="relative min-h-screen w-full bg-[#b9c6d1] overflow-hidden font-sans text-[#002b49]"
+      className="fixed inset-0 w-full h-full bg-[#b9c6d1] overflow-hidden font-sans text-[#002b49]"
       role="main"
-      aria-label="Page d'inscription"
     >
-      {/* ------------------------------ */}
-      {/*   Arrière-plan billets (Mobile) */}
-      {/* ------------------------------ */}
-      <img
-        src="/WEBP/Mobile/Lapince-Hero-Background-Mobile.webp"
-        className="block md:hidden absolute top-[90%] left-[-5%] w-[45%] scale-200 z-10"
-        alt="Illustration de billets - version mobile"
-      />
-
-      {/* ------------------------------ */}
-      {/*   Arrière-plan billets (Desktop) */}
-      {/* ------------------------------ */}
-      <img
-        src="/WEBP/Desktop/Lapince-Hero-Background-Desktop.webp"
-        className="hidden md:block absolute top-[50%] left-[20%] w-[25%] scale-280 z-10"
-        alt="Illustration de billets - version desktop"
-      />
-
-      {/* ------------------------------ */}
-      {/*   Couches de couleur (Mobile)   */}
-      {/* ------------------------------ */}
-      <div
-        className="absolute inset-0 bg-[#002b49]/10 z-20 md:hidden"
-        aria-hidden="true"
-      ></div>
-      <div
-        className="absolute inset-0 bg-white/30 z-20 md:hidden"
-        aria-hidden="true"
-      ></div>
-
-      {/* ------------------------------ */}
-      {/*   Couches de couleur (Desktop)  */}
-      {/* ------------------------------ */}
-      <div
-        className="absolute inset-0 bg-[#002b49]/5 md:bg-[#002b49]/20 z-20"
-        aria-hidden="true"
-      ></div>
-      <div
-        className="absolute inset-0 bg-white/10 md:bg-white/70 z-20"
-        aria-hidden="true"
-      ></div>
-
-      {/* ------------------------------ */}
-      {/*   Illustration main             */}
-      {/* ------------------------------ */}
-      <img
-        src="/WEBP/Mobile/Lapince-Hand-Mobile.webp"
-        className="block md:hidden absolute bottom-0 right-[15%] w-[40%] scale-140 z-20 pointer-events-none"
-        alt="Main tenant un billet - version mobile"
-      />
-
-      <img
-        src="/WEBP/Desktop/Lapince-Hand-Desktop.webp"
-        className="hidden md:block absolute bottom-0 right-25 w-[22%] h-auto z-50 pointer-events-none"
-        alt="Main tenant un billet - version desktop"
-      />
-
-      {/* ------------------------------ */}
-      {/*   Logo                         */}
-      {/* ------------------------------ */}
-      <img
-        src="/WEBP/Mobile/Lapince-Logo-Mobile.webp"
-        className="block md:hidden absolute top-6 left-6 w-24 z-50"
-        alt="Logo Lapince - version mobile"
-      />
-
-      <img
-        src="/WEBP/Desktop/Lapince-Logo-Desktop.webp"
-        className="hidden md:block absolute top-10 left-20 w-50 z-50"
-        alt="Logo Lapince - version desktop"
-      />
-
-      {/* ------------------------------ */}
-      {/*   Titre principal              */}
-      {/* ------------------------------ */}
-      <h1
-        className="
-    absolute 
-    left-[50px] md:left-[-10px]
-    w-full 
-    text-center 
-    text-[20px] md:text-[45px]
-    !text-[#002b49]
-    font-black 
-    tracking-tighter 
-    z-40
-    top-[30px] md:top-[-10px]
-  "
-      >
-        Inscription hahaha
-      </h1>
-
-      {/* ------------------------------ */}
-      {/*   Texte latéral (Desktop)      */}
-      {/* ------------------------------ */}
-      <div
-        className="hidden md:block absolute top-[50%] left-[5%] z-40"
-        aria-hidden="false"
-      >
-        <p className="text-[35px] font-bold leading-tight">
-          Créez votre compte Gratuit,
-          <br />
-          sans connexion bancaire,
-          <br />
-          sans prise de tête.
-        </p>
+      {/* ------------------------------------------------------------ */}
+      {/* 1. BLOC DESKTOP (MD+)                                        */}
+      {/* ------------------------------------------------------------ */}
+      <div className="hidden md:block">
+        <img
+          src="/WEBP/Desktop/Lapince-Hero-Background-Desktop.webp"
+          className="absolute bottom-0 left-0 w-[55vw] opacity-60 z-0 pointer-events-none select-none"
+          alt=""
+        />
+        <div className="absolute bottom-0 right-[5%] z-10 pointer-events-none hidden lg:block">
+          <img
+            src="/WEBP/Desktop/Lapince-Hand-Desktop.webp"
+            className="w-[24vw] h-auto object-contain"
+            alt=""
+          />
+        </div>
+        <div className="hidden 2xl:block absolute top-[55%] left-[5%] -translate-y-1/2 z-30 pointer-events-none max-w-[400px]">
+          <p className="text-[35px] font-black leading-tight uppercase italic opacity-80">
+            Créez votre compte Gratuit,
+            <br />
+            sans connexion bancaire,
+            <br />
+            sans prise de tête.
+          </p>
+        </div>
+        <img
+          src="/WEBP/Desktop/Lapince-Logo-Desktop.webp"
+          className="absolute top-10 left-20 w-24 md:w-36 lg:w-60 z-50 transition-all"
+          alt="Logo"
+        />
       </div>
 
-      {/* ------------------------------ */}
-      {/*   Texte latéral (Mobile)       */}
-      {/* ------------------------------ */}
-      <div className="block md:hidden absolute top-[18%] left-1/2 -translate-x-1/2 w-[100] text-center z-40">
-        <p className="text-[18px] font-bold italic leading-tight">
-          Créez votre compte Gratuit,
-          <br />
-          sans connexion bancaire,
-          <br />
-          sans prise de tête.
-        </p>
+      {/* ------------------------------------------------------------ */}
+      {/* 2. BLOC MOBILE (< MD)                                       */}
+      {/* ------------------------------------------------------------ */}
+      <div className="block md:hidden">
+        <img
+          src="/WEBP/Mobile/Lapince-Hero-Background-Mobile.webp"
+          className="absolute bottom-0 left-0 w-full opacity-70 z-0 pointer-events-none select-none"
+          alt=""
+        />
+        <img
+          src="/WEBP/Mobile/Lapince-Hand-Mobile.webp"
+          className="absolute bottom-0 right-0 w-[45%] z-10 opacity-90 pointer-events-none"
+          alt=""
+        />
+        <img
+          src="/WEBP/Mobile/Lapince-Logo-Mobile.webp"
+          className="absolute top-6 left-6 w-28 z-50"
+          alt="Logo"
+        />
       </div>
 
-      {/* ------------------------------ */}
-      {/*   Formulaire + Photo profil    */}
-      {/* ------------------------------ */}
+      {/* Overlay global (Z-20) */}
       <div
-        className="
-          absolute 
-          left-1/2 
-          -translate-x-1/2 
-          flex flex-col items-center 
-          z-40 
-          w-full 
-          max-w-[450px]
-          top-[22%] md:top-[3%]
-          scale-85 md:scale-80
-        "
-      >
-        {/* Photo profil (Desktop) */}
-        <div className="hidden md:block relative mb-4">
-          {/* Input caché pour téléverser la photo */}
-          <input
-            type="file"
-            accept="image/*"
-            id="upload-photo-desktop"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) setPhoto(file);
-            }}
-          />
+        className="absolute inset-0 bg-white/40 z-20 pointer-events-none"
+        aria-hidden="true"
+      ></div>
 
-          {/* Cercle de photo */}
-          <div
-            className="w-36 h-36 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center shadow-xl overflow-hidden"
-            role="img"
-            aria-label="Photo de profil"
-          >
-            <img
-              src={photo ? URL.createObjectURL(photo) : "/WEBP/Desktop/Lapince-Profil-Picture-Desktop.webp"}
-              alt={photo ? "aperçu de la photo" : "Photo de profil par défaut"}
-              className="w-full h-full object-cover rounded-full"
+      {/* ------------------------------------------------------------ */}
+      {/* 3. ZONE DE CONTENU (L'essentiel - Z-40)                      */}
+      {/* ------------------------------------------------------------ */}
+      {/* C'est ici que le scroll se passe, exactement comme sur LandingPage */}
+      <div className="absolute inset-0 z-40 overflow-y-auto flex flex-col items-center pt-2 pb-5 px-4 scrollbar-hide">
+        {/* Titre Inscription */}
+        <header className="text-center mt-12 mb-8 shrink-0 ">
+          <h1 className="text-[26px] translate-x-[60px] md:translate-x-[0px] md:text-[50px] font-black italic uppercase leading-none tracking-tighter">
+            Inscription
+          </h1>
+        </header>
+
+        {/* SECTION PHOTO (Avatar) */}
+        <div className="relative mb-6 shrink-0">
+          <label htmlFor="av-reg" className="cursor-pointer block">
+            <input
+              type="file"
+              id="av-reg"
+              className="hidden"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setPhoto(file);
+              }}
             />
-          </div>
-
-          {/* Bouton + pour ouvrir le sélecteur de fichiers */}
-          <button
-            aria-label="Téléverser une photo"
-            onClick={() =>
-              document.getElementById("upload-photo-desktop")?.click()
-            }
-            className="absolute bottom-0 right-0 bg-[#002b49] text-white p-1.5 rounded-full border-2 border-white shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              strokeWidth="4"
-              aria-hidden="true"
-            >
-              <path d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
+            <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/50 backdrop-blur-md border-2 border-white flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-[#002b49] transition-all">
+              <img
+                src={
+                  photo
+                    ? URL.createObjectURL(photo)
+                    : "/WEBP/Desktop/Lapince-Profil-Picture-Desktop.webp"
+                }
+                className="w-full h-full object-cover"
+                alt="Aperçu"
+              />
+            </div>
+            <div className="absolute bottom-1 right-1 bg-[#002b49] text-white p-2 rounded-full border-2 border-white shadow-lg group-hover:scale-110 transition-transform">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth="4"
+              >
+                <path d="M12 4v16m8-8H4" />
+              </svg>
+            </div>
+          </label>
         </div>
 
-        {/* Photo profil (Mobile) */}
-        <div className="block md:hidden relative mb-4">
-          {/* input hidden */}
-          <input
-            type="file"
-            accept="image/*"
-            id="upload-photo-mobile"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) setPhoto(file);
-            }}
-          />
-
-          {/* cecle photo*/}
-          <div className="w-26 h-26 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center shadow-xl overflow-hidden">
-            <img
-              src={photo ? URL.createObjectURL(photo) : "/WEBP/Desktop/Lapince-Profil-Picture-Desktop.webp"}
-              alt={photo ? "aperçu de la photo" : "Photo de profil par défaut"}
-              className="w-full h-full object-cover rounded-full"
-            />
-          </div>
-
-          {/* button + */}
-          <button
-            aria-label="Téléverser une photo"
-            onClick={() =>
-              document.getElementById("upload-photo-mobile")?.click()
-            }
-            className="absolute bottom-0 right-0 bg-[#002b49] text-white p-1 rounded-full border-2 border-white shadow-lg"
-          >
-            <svg
-              className="w-3 h-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              strokeWidth="4"
-              aria-hidden="true"
-            >
-              <path d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Formulaire */}
-        <div
-          className="
-            w-full 
-            bg-white/5 md:bg-white/20 
-            backdrop-blur-[1px] md:backdrop-blur-2xl 
-            rounded-[2.5rem] 
-            p-4 
-            shadow-2xl 
-            border border-white/10 md:border-white/30
-            z-40
-          "
-        >
+        {/* Cadre du Formulaire */}
+        <section className="w-full max-w-[440px] bg-white/20 backdrop-blur-3xl rounded-[2.5rem] p-6 md:p-10 shadow-2xl border border-white/30 mb-8 shrink-0 relative">
           <RegisterForm
             onSubmit={handleSubmit}
             isLoading={isLoading}
             error={error}
           />
-        </div>
+        </section>
 
-        <p className="mt-3 text-xs font-bold">
+        {/* Lien de redirection */}
+        <p className="text-sm font-bold shrink-0 mb-10">
           Déjà un compte ?{" "}
-          <a
-            href="/login"
-            className="underline ml-1 focus-visible:ring-2 focus-visible:ring-blue-500"
-          >
+          <a href="/login" className="underline ml-1">
             Se connecter
           </a>
         </p>
       </div>
 
-      {/* ------------------------------ */}
-      {/*   Pied de page (Mobile)        */}
-      {/* ------------------------------ */}
-      <footer
-        className="
-          block md:hidden absolute bottom-0 left-0 w-full h-[22px] bg-white flex items-center justify-center z-50
-        "
-        role="contentinfo"
-      >
-        <p className="text-[9px] font-bold text-[#002b49] opacity-70">
-          Mentions légales
-        </p>
-      </footer>
-
-      {/* ------------------------------ */}
-      {/*   Pied de page (Desktop)       */}
-      {/* ------------------------------ */}
-      <footer
-        className="
-          hidden md:flex absolute bottom-0 left-0 w-full h-[50px] bg-white items-center justify-center z-50
-        "
-        role="contentinfo"
-      >
-        <p className="text-[10px] font-bold text-[#002b49] opacity-70">
-          Mentions légales
-        </p>
+      {/* ------------------------------------------------------------ */}
+      {/* 4. FOOTER                                                    */}
+      {/* ------------------------------------------------------------ */}
+      <footer className="absolute bottom-0 left-0 w-full z-50">
+        <Footer showIcons={true} />
       </footer>
     </main>
   );

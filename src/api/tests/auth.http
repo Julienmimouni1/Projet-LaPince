@@ -59,8 +59,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json  
 
 {
-  "email": "cynthia@example.com",
-  "password": "Pierre123!motdepasse"
+  "email": "alex@yahoo.com",
+  "password": "Alex1234&"
 }
 
 ### 7. Email non trouvé → 401

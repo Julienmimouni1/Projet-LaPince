@@ -1,0 +1,195 @@
+import { useState, type ChangeEvent } from "react";
+import ParametreForm from "../../components/auth/ParametreForm";
+import Footer from "../../components/Footer/footer";
+
+/**
+ * Page de Paramètres - Isolation Totale Desktop/Mobile
+ */
+export default function ParametrePage() {
+  const [photo, setPhoto] = useState<File | null>(null);
+
+  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setPhoto(e.target.files[0]);
+    }
+  };
+
+  return (
+    <main
+      className="fixed inset-0 w-full h-full bg-[#b9c6d1] overflow-hidden font-sans text-[#002b49]"
+      role="main"
+    >
+      {/* ------------------------------------------------------------ */}
+      {/* 1. SECTION DESKTOP (MD+)                                     */}
+      {/* ------------------------------------------------------------ */}
+      <div className="hidden md:block">
+        {/* Arrière-plan Billets Desktop */}
+        <img
+          src="/WEBP/Desktop/Lapince-Hero-Background-Desktop.webp"
+          className="absolute bottom-0 left-0 w-[55vw] opacity-60 z-0 pointer-events-none"
+          alt=""
+        />
+
+        {/* Main Desktop */}
+        <div className="absolute bottom-0 right-[5%] z-10 pointer-events-none">
+          <img
+            src="/WEBP/Desktop/Lapince-Hand-Desktop.webp"
+            className="w-[24vw] h-auto object-contain"
+            alt=""
+          />
+        </div>
+
+        {/* Logo et Navigation Desktop */}
+        <img
+          src="/WEBP/Desktop/Lapince-Logo-Desktop.webp"
+          className="absolute top-10 left-10 w-36 lg:w-55 z-50"
+          alt="Logo Desktop"
+        />
+        <button className="absolute top-10 right-10 bg-[#002b49] text-white px-8 py-2 rounded-full text-sm font-bold z-50 shadow-xl hover:scale-105 transition-all">
+          Déconnexion
+        </button>
+      </div>
+
+      {/* ------------------------------------------------------------ */}
+      {/* 2. SECTION MOBILE (< MD)                                     */}
+      {/* ------------------------------------------------------------ */}
+      <div className="block md:hidden">
+        {/* Arrière-plan Billets Mobile */}
+        <img
+          src="/WEBP/Mobile/Lapince-Hero-Background-Mobile.webp"
+          className="absolute bottom-0 left-0 w-screen opacity-70 z-0 pointer-events-none"
+          alt=""
+        />
+
+        {/* Logo Mobile - Indépendant */}
+        <img
+          src="/WEBP/Mobile/Lapince-Logo-Mobile.webp"
+          className="absolute top-6 left-6 w-28 z-50"
+          alt="Logo Mobile"
+        />
+
+        {/* Déconnexion Mobile - Indépendant */}
+        <button className="absolute top-6 right-6 bg-[#002b49] text-white px-4 py-1.5 rounded-full text-[10px] font-bold z-50 shadow-lg">
+          Déconnexion
+        </button>
+      </div>
+
+      {/* Overlay d'éclaircissement global */}
+      <div
+        className="absolute inset-0 bg-white/40 z-20 pointer-events-none"
+        aria-hidden="true"
+      ></div>
+
+      {/* ------------------------------------------------------------ */}
+      {/* 3. ZONE DE CONTENU (SCROLLABLE COMME LANDING PAGE)           */}
+      {/* ------------------------------------------------------------ */}
+      <div className="absolute inset-0 z-40 overflow-y-auto scrollbar-hide flex flex-col items-center">
+        {/* --- A. CONTENU MOBILE UNIQUEMENT --- */}
+        <div className="flex md:hidden flex-col items-center w-full pt-24 pb-32 px-4 shrink-0">
+          {/* Titre Mobile - Utilisez 'relative left-[x]' pour le décalage horizontal */}
+          <header className="text-center mb-8 relative left-0">
+            <h1 className="text-[20px] translate-x-[100px] font-black italic uppercase leading-none tracking-tighter">
+              Paramètres
+            </h1>
+            <p className="text-[10px] translate-x-[100px] font-bold opacity-90 mt-2 text-[#002b49]">
+              Personnalisez votre espace.
+            </p>
+          </header>
+
+          {/* Photo de Profil Mobile */}
+          <div className="relative mb-8 shrink-0">
+            <label htmlFor="av-mob" className="cursor-pointer block">
+              <input
+                type="file"
+                id="av-mob"
+                className="hidden"
+                onChange={handlePhotoChange}
+              />
+              <div className="w-28 h-28 rounded-full bg-white/50 border-2 border-white flex items-center justify-center shadow-xl overflow-hidden backdrop-blur-md">
+                <img
+                  src={
+                    photo
+                      ? URL.createObjectURL(photo)
+                      : "/WEBP/Desktop/Lapince-Profil-Picture-Desktop.webp"
+                  }
+                  className="w-full h-full object-cover"
+                  alt=""
+                />
+              </div>
+              <div className="absolute bottom-0 right-0 bg-[#002b49] text-white p-2 rounded-full border-2 border-white shadow-lg">
+                <svg
+                  className="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth="4"
+                >
+                  <path d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </label>
+          </div>
+
+          <section className="w-full max-w-[400px] bg-white/20 backdrop-blur-3xl rounded-[2.5rem] p-7 shadow-2xl border border-white/30">
+            <ParametreForm />
+          </section>
+        </div>
+
+        {/* --- B. CONTENU DESKTOP UNIQUEMENT --- */}
+        <div className="hidden md:flex flex-col items-center w-full min-h-full justify-center pt-10 pb-28 px-4 shrink-0">
+          <header className="text-center mb-10 shrink-0">
+            <h1 className="text-[50px] font-black italic uppercase leading-none tracking-tighter">
+              Paramètres
+            </h1>
+            <p className="text-[18px] font-bold opacity-90 mt-2">
+              Personnalisez votre espace sans prise de tête.
+            </p>
+          </header>
+
+          {/* Photo de Profil Desktop */}
+          <div className="relative mb-10 shrink-0 group">
+            <label htmlFor="av-desk" className="cursor-pointer block">
+              <input
+                type="file"
+                id="av-desk"
+                className="hidden"
+                onChange={handlePhotoChange}
+              />
+              <div className="w-36 h-36 rounded-full bg-white/50 border-2 border-white flex items-center justify-center shadow-2xl overflow-hidden backdrop-blur-md group-hover:border-[#002b49] transition-all">
+                <img
+                  src={
+                    photo
+                      ? URL.createObjectURL(photo)
+                      : "/WEBP/Desktop/Lapince-Profil-Picture-Desktop.webp"
+                  }
+                  className="w-full h-full object-cover"
+                  alt=""
+                />
+              </div>
+              <div className="absolute bottom-1 right-1 bg-[#002b49] text-white p-2 rounded-full border-2 border-white shadow-lg group-hover:scale-110 transition-transform">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth="4"
+                >
+                  <path d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </label>
+          </div>
+
+          <section className="w-full max-w-[450px] bg-white/20 backdrop-blur-3xl rounded-[2.5rem] p-10 shadow-2xl border border-white/30">
+            <ParametreForm />
+          </section>
+        </div>
+      </div>
+
+      {/* 4. FOOTER (FIXÉ EN BAS) */}
+      <footer className="absolute bottom-0 left-0 w-full z-50">
+        <Footer showIcons={true} activeIds={["home", "dashboard"]} />
+      </footer>
+    </main>
+  );
+}
