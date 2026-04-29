@@ -7,8 +7,18 @@ export interface LoginCredentials {
 }
 
 export interface AuthResponse {
-  token : string; // Le token d'authentification (JWT) que le serveur renvoie en cas de connexion réussie. Ce token doit être stocké côté client (dans un cookie httpOnly) et envoyé avec les requêtes suivantes pour prouver que l'utilisateur est authentifié.
-  user : AuthUser; // L'utilisateur connecté, avec ses infos (id, prénom, nom, email) mais jamais le mot de passe. C'est ce que le serveur renvoie quand la connexion réussit.
+  // Le serveur renvoie désormais un objet accessToken contenant le token et sa durée
+  accessToken: {
+    token: string;
+    expiresIn: number;
+  };
+ // Et un objet refreshToken contenant lui aussi le token et sa durée
+  refreshToken: {
+    token: string;
+    expiresIn: number;
+  };
+ // Note : le serveur ne renvoie plus l'utilisateur dans la réponse de connexion, car les infos de l'utilisateur sont désormais récupérées via la route GET /users/me grâce au cookie d'authentification. Cela simplifie la gestion des tokens côté client et améliore la sécurité.
+ //  Si besoin, on peut toujours récupérer les infos de l'utilisateur connecté en appelant fetchCurrentUser() après une connexion réussie.
 }
 
 
@@ -54,21 +64,37 @@ export async function registerUser(formData: RegisterFormData): Promise<AuthUser
     return authResponse;
   }
 
+export async function fetchCurrentUser(): Promise<AuthUser> {
+  // MOCK TEMPORAIRE : On simule la réponse du serveur pour ne pas être bloqué
+  // À retirer quand l'équipe back-end aura fini la route GET /users
+  console.log("Mock activé : Simulation de l'utilisateur connecté");
+  return {
+    id: 2,
+    email: "juliennn@youpi.com",
+    first_name: "Julien",
+    last_name: "Front",
+    photo: null,
+    createdAt: "2023-01-01T00:00:00.000Z",
+    updatedAt: "2023-01-01T00:00:00.000Z"
+  };}
 
-  export async function fetchCurrentUser(): Promise<AuthResponse['user']> {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users`, {
-    method: "GET",
-    // INDISPENSABLE : c'est ce qui dit au navigateur d'envoyer le cookie caché au back-end
-    credentials: "include", 
-  });
 
-  if (!response.ok) {
-    throw new Error("Non authentifié ou session expirée");
-  }
 
-  // Le serveur renvoie juste l'objet utilisateur (plus de token !)
-  return response.json(); 
-}
+  //CODE ORIGINAL COMMENTE EN ATTEND LE BACK-END POUR LA VERIFICATION DE SESSION (GET /users/me)
+//   export async function fetchCurrentUser(): Promise<AuthResponse['user']> {
+//   const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users`, {
+//     method: "GET",
+//     // INDISPENSABLE : c'est ce qui dit au navigateur d'envoyer le cookie caché au back-end
+//     credentials: "include", 
+//   });
+
+//   if (!response.ok) {
+//     throw new Error("Non authentifié ou session expirée");
+//   }
+
+//   // Le serveur renvoie juste l'objet utilisateur (plus de token !)
+//   return response.json(); 
+// }
 
 export async function fetchLogout(): Promise<void> {
   const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, {

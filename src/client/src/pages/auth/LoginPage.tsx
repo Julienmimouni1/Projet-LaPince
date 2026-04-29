@@ -2,7 +2,7 @@
 // C'est le composant parent de LoginForm, il lui passe la fonction à appeler lors de la soumission du formulaire, ainsi que les états d'erreur et de chargement.
 
 import { useState } from 'react'; // Permet de gérer l'état local du formulaire, notamment pour afficher les erreurs
-import { loginUser } from '../../services/authApi'; // La fonction qui envoie les données de connexion au serveur
+import { fetchCurrentUser, loginUser } from '../../services/authApi'; // La fonction qui envoie les données de connexion au serveur
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom'; // Permet de rediriger l'utilisateur après une connexion réussie
 import LoginForm from '../../components/auth/LoginForm';
@@ -24,14 +24,21 @@ const handleLoginSubmit = async (credentials: LoginCredentials) => {
     setError(null);
 
     try {
-      // 1. On appelle l'API via notre service
-      const response = await loginUser(credentials);
+      // 1. On appelle l'API : le serveur valide et place les JWT dans les cookies.
+      // On n'a même pas besoin de stocker la réponse dans une variable car on utilise les cookies !
+      await loginUser(credentials);
       
-      // 2. On met à jour l'état global de l'application (le user est maintenant connecté)
-      login(response.user); // Le token est dans le cookie, on sauvegarde juste l'utilisateur dans l'état React
+      // 2. NOUVELLE ÉTAPE CRUCIALE : Maintenant qu'on a les cookies, on récupère le profil
+      // (Cela appellera ton Mock temporaire, puis plus tard la vraie API GET /users)
+      const currentUser = await fetchCurrentUser();
 
-      // 3. On redirige vers la page d'accueil ou le dashboard
+       // 3. On sauvegarde le VRAI utilisateur (avec first_name, last_name...) dans l'état React
+      login(currentUser); 
+
+         // 4. L'application sait qui est connecté, on peut rediriger sereinement
       navigate('/dashboard'); 
+
+
     } catch (err : any) {
          // On attrape l'erreur jetée par le throw dans authApi.ts et on affiche le message d'erreur à l'utilisateur
       setError(err.message || 'Email ou mot de passe incorrect');
