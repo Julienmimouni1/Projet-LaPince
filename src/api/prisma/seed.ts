@@ -16,8 +16,10 @@ async function main() {
   ];
 
   for (const cat of defaultCategories) {
-    await prisma.category.create({
-      data: {
+    await prisma.category.upsert({
+      where: { name: cat.name },
+    update: {},
+    create: {
         name: cat.name,
         type: cat.type,
         color: cat.color,
