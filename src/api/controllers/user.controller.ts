@@ -6,13 +6,7 @@ import { updateUserSchema } from "../validators/user.validator.js"
 //GET /users/me
 // Retourne le profil de l'utilisateur connecté (sans le mot de passe)
 export async function getMe(req: Request, res : Response) {
-    // Remplacer par req.user.id une fois le middleware JWT en place
-    const id = Number(req.params.id);
-
-    if (isNaN(id)) {
-        res.status(400).json({ message: "Identifiant Invalide"});
-        return;
-    }
+    const id = req.user!.id;
 
     const user = await prisma.user.findUnique({
         where: { id },
@@ -38,12 +32,7 @@ export async function getMe(req: Request, res : Response) {
 // PATCH /users/me
 // Met à Jour les informations du profil
 export async function updateMe(req: Request, res: Response) {
-    const id = Number(req.params.id);
-
-    if (isNaN(id)) {
-        res.status(400).json({ message:"Identifiant invalide"});
-        return;
-    };
+    const id = req.user!.id;
 
     // Validation des données entrantes avec Zod (même pattern que auth.controller)
     const result = updateUserSchema.safeParse(req.body) 
@@ -100,12 +89,7 @@ export async function updateMe(req: Request, res: Response) {
 // Supprime le compte utilisateur
 
 export async function deleteMe(req: Request, res: Response) {
-    const id = Number(req.params.id)
-
-    if (isNaN(id)) {
-        res.status(400).json({ message : "Identifiant invalide" });
-        return;
-    }
+    const id = req.user!.id;
 
     const existing = await prisma.user.findUnique({where: { id } });
     if (!existing) {
