@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3007
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjgsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzQ2NzE1MSwiZXhwIjoxNzc3NDY4MDUxLCJhdWQiOiJhY2Nlc3MifQ.LSyP3fCEdodBvEfU4w4HTSjQlp2BXfH1kdE0l1JYLpo
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzQ5MTg0MCwiZXhwIjoxNzc3NDkyNzQwLCJhdWQiOiJhY2Nlc3MifQ.1Yxv-G0vipV6nyratjcD8tVYcrOtKRUJYtpNOsTDLNw
 
 ### 1. Récupérer son profil → 200
 GET {{baseUrl}}/users/me
