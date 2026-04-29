@@ -1,3 +1,6 @@
+// Ce fichier contient le contexte global d'authentification de l'application. Il gère l'état de l'utilisateur connecté, les fonctions de connexion et de déconnexion, 
+// ainsi que la vérification de session au démarrage de l'application.
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import type { AuthResponse } from '../services/authApi';
 import { fetchCurrentUser, fetchLogout } from '../services/authApi';
