@@ -47,7 +47,7 @@ services:
         - action: rebuild
           path: ./src/api/package.json
         - action: rebuild
-          path: ./src/api/prisma.config.ts
+          path: ./src/api/prisma.config.js #test pour le fichier seed
         - action: rebuild
           path: ./src/api/prisma/schema.prisma
 
