@@ -56,7 +56,7 @@ export async function registerUser(formData: RegisterFormData): Promise<AuthUser
 
 
   export async function fetchCurrentUser(): Promise<AuthResponse['user']> {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users`, {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/me`, {
     method: "GET",
     // INDISPENSABLE : c'est ce qui dit au navigateur d'envoyer le cookie caché au back-end
     credentials: "include", 

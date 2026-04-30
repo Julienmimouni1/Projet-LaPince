@@ -26,6 +26,11 @@ export function authMiddleware(
 }
 
 function extractAccessToken(req: Request) {
+  // Cookie posé par le login (flux navigateur avec credentials: "include")
+  if (req.cookies?.accessToken) {
+    return req.cookies.accessToken as string;
+  }
+  // Fallback : Authorization: Bearer <token> (Postman, mobile, etc.)
   const parts = req.headers.authorization?.split(" ");
   if (!parts || parts.length !== 2 || parts[0] !== "Bearer" || !parts[1]) {
     throw new UnauthorizedError(

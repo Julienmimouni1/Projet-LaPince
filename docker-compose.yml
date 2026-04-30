@@ -43,6 +43,18 @@ services:
         - action: sync
           path: ./src/api/src
           target: /app/src
+        - action: sync
+          path: ./src/api/middlewares
+          target: /app/middlewares
+        - action: sync
+          path: ./src/api/controllers
+          target: /app/controllers
+        - action: sync
+          path: ./src/api/lib
+          target: /app/lib
+        - action: sync
+          path: ./src/api/routes
+          target: /app/routes
         # Reconstruit l'image si les dépendances ou le schéma Prisma changent
         - action: rebuild
           path: ./src/api/package.json

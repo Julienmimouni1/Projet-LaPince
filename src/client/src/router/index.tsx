@@ -4,6 +4,7 @@ import LoginPage from "../pages/auth/Login/loginPage";
 import PrivateRoute from "../components/PrivateRoute";
 import ParametrePage from "../pages/Parametre/ParametrePage";
 import LandingPage from "../pages/landingPage/landingPage";
+import TransactionPage from "../pages/Transaction/TransactionPage";
 
 export const router = createBrowserRouter([
   // --- ROUTES PUBLIQUES ---
@@ -37,6 +38,11 @@ export const router = createBrowserRouter([
         path: "/dashboard",
         // element: <DashboardPage />, // À décommenter quand il sera créée
         element: <div>Bienvenue sur ton Dashboard sécurisé !</div>,
+      },
+      {
+        path: "/transactions",
+        // Placeholder — sera remplacée par la page de Marie
+        element: <TransactionPage />,
       },
       // {
       //   path: "/parameters",

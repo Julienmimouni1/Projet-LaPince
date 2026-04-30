@@ -129,8 +129,9 @@ async function replaceRefreshTokenInDatabase(refreshToken: Token, user: User) {
 function setAccessTokenCookie(res: Response, accessToken: Token) {
   res.cookie("accessToken", accessToken.token, {
     httpOnly: true,
-    secure: config.isProd, // HTTPS uniquement en production
-    sameSite: "none",
+    secure: config.isProd,
+    // SameSite=None requiert Secure=true (Chrome l'exige). En dev on utilise "lax".
+    sameSite: config.isProd ? "none" : "lax",
     maxAge: accessToken.expiresIn,
   });
 }
@@ -138,8 +139,8 @@ function setAccessTokenCookie(res: Response, accessToken: Token) {
 function setRefreshTokenCookie(res: Response, refreshToken: Token) {
   res.cookie("refreshToken", refreshToken.token, {
     httpOnly: true,
-    secure: config.isProd, // HTTPS uniquement en production
-    sameSite: "none",
+    secure: config.isProd,
+    sameSite: config.isProd ? "none" : "lax",
     maxAge: refreshToken.expiresIn,
     path: "/auth/refresh",
   });
