@@ -42,3 +42,20 @@ model RefreshToken {
 
   @@map("refresh_tokens")
 }
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  amount      Decimal  
+  date        DateTime
+  description String?
+  
+  // Clés étrangères
+  userId      Int      @map("iduser")     // Mappé pour garder le nom en BDD
+  categoryId  Int      @map("idcategory") // Mappé pour garder le nom en BDD
+  
+  // Relations
+  category  Category @relation(fields: [categoryId], references: [id]) // Relation avec Category, en mappant categoryId à idcategory en BDD
+   User     User     @relation(fields: [userId], references: [id]) // Relation avec User, en mappant userId à iduser en BDD
+
+  @@map("transactions")
+}

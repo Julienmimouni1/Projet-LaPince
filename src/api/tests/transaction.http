@@ -2,8 +2,7 @@
 @baseUrl = http://localhost:3007
 # /!\ Important : Tu dois d'abord te connecter via ta route login, 
 # récupérer le token généré, et le coller ici pour tester.
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjgsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzQ2NzE1MSwiZXhwIjoxNzc3NDY4MDUxLCJhdWQiOiJhY2Nlc3MifQ.LSyP3fCEdodBvEfU4w4HTSjQlp2BXfH1kdE0l1JYLpo
-
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzU1NDk3OCwiZXhwIjoxNzc3NTU1ODc4LCJhdWQiOiJhY2Nlc3MifQ.XTVfGmTqYC7SNuFDvtKyg8YjUG-o_qAa4rIj70ZaW2Y
 ### ----------------------------------------------------
 ### 1. GET - Récupérer toutes les transactions
 ### ----------------------------------------------------
