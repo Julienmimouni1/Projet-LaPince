@@ -59,11 +59,15 @@ model Category {
   icon        String?
   type        CategoryType
   is_default  Boolean  @default(false)
+
   id_user     Int?
   user        User?    @relation(fields: [id_user], references: [id])
+
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-    @@unique ([name, id_user])
+  
+  @@unique([name, id_user]) //chaque user a ses catégories
+  @@index([id_user])  
   @@map("category")
 }
