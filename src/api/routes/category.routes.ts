@@ -5,16 +5,18 @@ import { getOneCategory } from "../controllers/category.controller.ts";
 import { createCategory } from "../controllers/category.controller.ts";
 import { updateCategory } from "../controllers/category.controller.ts";
 import { deleteCategory } from "../controllers/category.controller.ts";
+//import { authMiddleware } from "../middlewares/access.controller.middleware.ts";
+
 
 const router = Router();
 
-router.get("/categories", getAllCategory);
-router.get("/categories/:id", getOneCategory);
+router.get("/",  getAllCategory);
+router.get("/:id",  getOneCategory);
 
-router.post("/categories", createCategory);
+router.post("/", createCategory);
 
-router.patch("/categories/:id", updateCategory)
+router.patch("/:id",  updateCategory)
 
-router.delete("/categories/:id", deleteCategory)
+router.delete("/:id",  deleteCategory)
 
 export default router;

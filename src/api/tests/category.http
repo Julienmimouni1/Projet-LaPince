@@ -12,23 +12,22 @@ GET {{baseUrl}}/categories?default=true
 GET {{baseUrl}}/categories?id_user=1
 
 ### Récupérer une catégorie
-GET {{baseUrl}}/categories/1
-
+GET {{baseUrl}}/categories/8
 ### Créer une catégorie
 POST {{baseUrl}}/categories
 Content-Type: application/json
 
 {
-  "name": "Transport",
+  "name": "Sport",
   "color": "#8B5CF6",
   "icon": "car",
-  "type": "expense",
-  "is_default": false,
-  "id_user": 1
+  "type": "EXPENSE",
+  "is_default": false
+  
 }
 
 ### Modifier une catégorie
-PATCH {{baseUrl}}/categories/1
+PATCH {{baseUrl}}/categories/9
 Content-Type: application/json
 
 {
@@ -37,4 +36,4 @@ Content-Type: application/json
 }
 
 ### Supprimer une catégorie
-DELETE {{baseUrl}}/categories/5
+DELETE {{baseUrl}}/categories/16

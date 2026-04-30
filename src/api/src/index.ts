@@ -4,7 +4,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import authRouter from "../routes/auth.routes.js";
 import userRouter from "../routes/user.routes.js";
-import categoryRouter from "../routes/category.routes.ts"
+import categoryRouter from "../routes/category.routes.js"
 
 // Créer une app Express
 const app = express();
@@ -26,7 +26,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter)
-app.use("/category", categoryRouter)
+app.use("/categories", categoryRouter)
 app.get('/', (req, res) => {
     res.json("Hello")
 } )

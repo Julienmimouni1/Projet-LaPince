@@ -41,11 +41,19 @@ export async function getOneCategory(req:Request, res: Response) {
 try {
 
 // recupère le paramètre "id" dans l'URL
-    const { id } = req.params
+    const { id } = req.params;
+
+    const categoryId = Number(id); // conversion en nombre 
+
+    if (isNaN(categoryId)) { // verification de la conversion , si elle a échoué
+      return res.status(400).json({ // erreur 400 si ce n'est pas un nombre valide 
+        message: "ID invalide"
+      });
+    }
 
     const oneCategory = await prisma.category.findUnique({
     where: {
-        id: Number(id), // conversion en Number pour Prisma
+        id: categoryId
       },
     });
 
@@ -59,6 +67,7 @@ try {
     return res.status(200).json(oneCategory);
 
 }   catch (error) {
+  console.error("GET ONE CATEGORY ERROR:", error);
 
 
     //gestion des erreurs serveurs
