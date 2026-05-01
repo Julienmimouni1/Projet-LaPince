@@ -1,3 +1,6 @@
+### -----------------------------------------
+### VARIABLES
+### -----------------------------------------
 @baseUrl = http://localhost:3007
 @token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzQ5NDI4MCwiZXhwIjoxNzc3NDk1MTgwLCJhdWQiOiJhY2Nlc3MifQ.sgkhWC0IngZSCMCHTBtnYL8i37YOMOdIzBL_EvRDBX0
 ### 1. Récupérer tous les budgets de l'utilisateur

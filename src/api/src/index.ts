@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "../routes/auth.routes.js";
 import userRouter from "../routes/user.routes.js";
 import budgetRoutes from "../routes/budget.routes.js";
+import alertRoutes from "../routes/alert.routes.js"
 
 
 // Créer une app Express
@@ -28,6 +29,7 @@ app.use(cookieParser());
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/budgets", budgetRoutes);
+app.use("/alerts" , alertRoutes);
 
 
 app.get('/', (req, res) => {

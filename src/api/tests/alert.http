@@ -1,0 +1,45 @@
+### -----------------------------------------
+### VARIABLES
+### -----------------------------------------
+@baseUrl = http://localhost:3007
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzY0MDY3OSwiZXhwIjoxNzc3NjQxNTc5LCJhdWQiOiJhY2Nlc3MifQ.oTv0h8rUWRCdXupxLmYLYn_b1nDicQJob5zg9xfZ6J0
+
+
+### -----------------------------------------
+### 1) Récupérer toutes les alertes
+### -----------------------------------------
+GET {{baseUrl}}/alerts
+Authorization: {{token}}
+Content-Type: application/json
+
+
+### -----------------------------------------
+### 2) Récupérer une alerte par ID
+### -----------------------------------------
+GET {{baseUrl}}/alerts/1
+Authorization: {{token}}
+Content-Type: application/json
+
+
+### -----------------------------------------
+### 3) Marquer une alerte comme lue
+### -----------------------------------------
+PATCH {{baseUrl}}/alerts/1/read
+Authorization: {{token}}
+Content-Type: application/json
+
+
+### -----------------------------------------
+### 4) Marquer toutes les alertes comme lues
+### -----------------------------------------
+PATCH {{baseUrl}}/alerts/read-all
+Authorization: {{token}}
+Content-Type: application/json
+
+
+### -----------------------------------------
+### 5) Supprimer une alerte
+### -----------------------------------------
+DELETE {{baseUrl}}/alerts/1
+Authorization: {{token}}
+Content-Type: application/json
