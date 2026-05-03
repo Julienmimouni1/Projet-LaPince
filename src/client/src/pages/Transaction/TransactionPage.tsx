@@ -2,9 +2,13 @@ import Footer from "../../components/Footer/footer";
 import DepenseCard from "../../components/CategoryCard/DepenseCard";
 import RevenuCard from "../../components/CategoryCard/RevenuCard";
 import BudgetCard from "../../components/CategoryCard/BudgetCard";
+import TransactionLine from "../../components/TransactionList/TransactionLine";
+import { MOCK_TRANSACTIONS } from "../../mocks/transactions.mock";
 
 // Page placeholder — sera remplacée par la version de Marie
 export default function TransactionPage() {
+
+
   return (
     <main className="fixed inset-0 w-full h-full bg-[#cbd5e1] overflow-hidden font-sans text-[#002b49]">
       {/* Arrière-plan billets */}
@@ -16,7 +20,10 @@ export default function TransactionPage() {
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-white/30 z-10 pointer-events-none" aria-hidden="true" />
+      <div
+        className="absolute inset-0 bg-white/30 z-10 pointer-events-none"
+        aria-hidden="true"
+      />
 
       {/* Contenu */}
       <div className="relative z-20 flex flex-col h-full pb-10">
@@ -27,13 +34,24 @@ export default function TransactionPage() {
             className="w-14 mb-3"
             alt="Logo La Pince"
           />
-          <p className="text-xs font-bold uppercase tracking-widest opacity-60">Solde</p>
+          <p className="text-xs font-bold uppercase tracking-widest opacity-60">
+            Solde
+          </p>
           <p className="text-4xl font-black tracking-tight">000,00 €</p>
+          <div>
+            {MOCK_TRANSACTIONS.map((t) => (
+              <TransactionLine key={t.id} transaction={t} />
+            ))}
+
+            {MOCK_TRANSACTIONS.map((t) =>
+              <TransactionLine key={t.id} transaction={t} />          
+            )}
+
+          </div>
         </header>
 
         {/* Cartes — layout en bulles */}
         <section className="relative flex-1 flex items-center justify-center">
-
           {/* Desktop : bulles bien espacées */}
           <div className="hidden md:block relative w-full max-w-4xl h-96">
             <div className="absolute top-0 right-12">
@@ -55,7 +73,6 @@ export default function TransactionPage() {
             </div>
             <BudgetCard />
           </div>
-
         </section>
       </div>
 
