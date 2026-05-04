@@ -147,7 +147,7 @@ export default function TransactionPage() {
         footerHeight={footerHeight}
       />
       <footer ref={footerRef} className="absolute bottom-0 left-0 w-full z-50">
-        <Footer showIcons activeIds={["home", "transactions"]} />
+        <Footer showIcons activeIds={["landingpage", "params"]} />
       </footer>
     </main>
   );

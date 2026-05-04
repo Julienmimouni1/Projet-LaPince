@@ -188,7 +188,7 @@ export default function ParametrePage() {
 
       {/* 4. FOOTER (FIXÉ EN BAS) */}
       <footer className="absolute bottom-0 left-0 w-full z-50">
-        <Footer showIcons={true} activeIds={["home", "dashboard"]} />
+        <Footer showIcons={true} activeIds={["landingpage", "transactions"]} />
       </footer>
     </main>
   );
