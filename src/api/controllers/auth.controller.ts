@@ -130,16 +130,21 @@ function setAccessTokenCookie(res: Response, accessToken: Token) {
   res.cookie("accessToken", accessToken.token, {
     httpOnly: true,
     secure: config.isProd, // HTTPS uniquement en production
-    sameSite: "none",
+    sameSite: config.isProd ? "none" : "lax", // pareil que pour le refresh token, en local on peut se permettre "lax" pour que ça fonctionne en HTTP
     maxAge: accessToken.expiresIn,
   });
 }
 
 function setRefreshTokenCookie(res: Response, refreshToken: Token) {
   res.cookie("refreshToken", refreshToken.token, {
-    httpOnly: true,
-    secure: config.isProd, // HTTPS uniquement en production
-    sameSite: "none",
+    httpOnly: true, // Le cookie n'est pas accessible via JavaScript, ce qui protège contre les attaques XSS
+    // En production (sur Vercel/Heroku/etc. en HTTPS), secure doit être true.
+    // En développement local (sur http://localhost), secure doit être false, 
+    // sinon le navigateur refusera purement et simplement le cookie.
+    secure: config.isProd, 
+    // Si sameSite est sur "none" (requis pour des requêtes cross-domain en prod), les navigateurs EXIGENT que secure soit true.
+    // Comme en local secure est false, sameSite="none" faisait crasher le cookie. Solution : En local, on utilise "lax" (qui accepte le HTTP), et en prod "none".
+    sameSite: config.isProd ? "none" : "lax",
     maxAge: refreshToken.expiresIn,
     path: "/auth/refresh",
   });

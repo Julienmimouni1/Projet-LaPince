@@ -26,13 +26,20 @@ export function authMiddleware(
 }
 
 function extractAccessToken(req: Request) {
-  const parts = req.headers.authorization?.split(" ");
-  if (!parts || parts.length !== 2 || parts[0] !== "Bearer" || !parts[1]) {
-    throw new UnauthorizedError(
-      "Vous n'êtes pas autorisé à accéder à cette resource",
-    );
+  // 1. On cherche d'abord dans les cookies (recommandé pour le web)
+  if (req.cookies?.accessToken) {
+    return req.cookies.accessToken;
   }
-  return parts[1];
+
+  // 2. Sinon on cherche dans le header Authorization (standard pour mobile/API)
+  const parts = req.headers.authorization?.split(" ");
+  if (parts && parts.length === 2 && parts[0] === "Bearer" && parts[1]) {
+    return parts[1];
+  }
+
+  throw new UnauthorizedError(
+    "Vous n'êtes pas autorisé à accéder à cette resource",
+  );
 }
 
 function verifyAndDecodeJWT(accessToken: string): JwtPayload {

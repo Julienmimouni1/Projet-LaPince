@@ -1,0 +1,57 @@
+### Variables d'environnement pour le fichier
+@baseUrl = http://localhost:3007
+# /!\ Important : Tu dois d'abord te connecter via ta route login, 
+# récupérer le token généré, et le coller ici pour tester.
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzU1NDk3OCwiZXhwIjoxNzc3NTU1ODc4LCJhdWQiOiJhY2Nlc3MifQ.XTVfGmTqYC7SNuFDvtKyg8YjUG-o_qAa4rIj70ZaW2Y
+### ----------------------------------------------------
+### 1. GET - Récupérer toutes les transactions
+### ----------------------------------------------------
+GET {{baseUrl}}/transactions
+Cookie: accessToken={{token}}
+
+### ----------------------------------------------------
+### 2. GET - Récupérer avec des filtres
+### ----------------------------------------------------
+GET {{baseUrl}}/transactions?idcategory=1&startDate=2026-04-01T00:00:00Z
+Cookie: accessToken={{token}}
+
+### ----------------------------------------------------
+### 3. POST - Créer une nouvelle transaction
+### ----------------------------------------------------
+POST {{baseUrl}}/transactions
+Content-Type: application/json
+Cookie: accessToken={{token}}
+
+{
+  "amount": 55.50,
+  "date": "2026-04-30T10:00:00.000Z",
+  "description": "Plein d'essence",
+  "idcategory": 2
+}
+
+### ----------------------------------------------------
+### 4. GET - Récupérer UNE transaction spécifique
+### ----------------------------------------------------
+# Change le "1" par l'ID de la transaction créée à l'étape 3
+GET {{baseUrl}}/transactions/1
+Cookie: accessToken={{token}}
+
+### ----------------------------------------------------
+### 5. PATCH - Mettre à jour une transaction
+### ----------------------------------------------------
+# Change le "1" par ton ID
+PATCH {{baseUrl}}/transactions/1
+Content-Type: application/json
+Cookie: accessToken={{token}}
+
+{
+  "amount": 60.00,
+  "description": "Plein d'essence (correction prix)"
+}
+
+### ----------------------------------------------------
+### 6. DELETE - Supprimer une transaction
+### ----------------------------------------------------
+# Change le "1" par ton ID
+DELETE {{baseUrl}}/transactions/1
+Cookie: accessToken={{token}}

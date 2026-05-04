@@ -5,9 +5,9 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "first_name": "Cynthia",
-  "last_name": "Dupont",
-  "email": "cynthia@example.com",
+  "first_name": "Julien",
+  "last_name": "Pourletest",
+  "email": "pourletest@example.com",
   "password": "Pierre123!motdepasse",
   "photo": "url"
 }
@@ -59,7 +59,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json  
 
 {
-  "email": "cynthia@example.com",
+  "email": "pourletest@example.com",
   "password": "Pierre123!motdepasse"
 }
 
