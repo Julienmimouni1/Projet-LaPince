@@ -4,7 +4,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import authRouter from "../routes/auth.routes.js";
 import userRouter from "../routes/user.routes.js";
-import transactionRouter from "../routes/transaction.routes.js";
+import categoryRouter from "../routes/category.routes.js";
 
 // Créer une app Express
 const app = express();
@@ -27,11 +27,8 @@ app.use(cookieParser());
 
 
 app.use("/auth", authRouter);
-app.use("/users", userRouter); 
-
-app.use("/transactions", transactionRouter); // Toutes les routes définies dans transactionRouter seront préfixées par "/transactions". Par exemple, la route définie comme router.get("/") dans transaction.routes.ts sera accessible à l'URL "/transactions/". De même, router.get("/:id") sera accessible à "/transactions/:id". Cela permet de structurer les routes de manière logique et d'éviter les conflits d'URL entre différentes ressources (comme les utilisateurs et les transactions).
-
-
+app.use("/users", userRouter)
+app.use("/categories", categoryRouter)
 app.get('/', (req, res) => {
     res.json("Hello")
 } )
