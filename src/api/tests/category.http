@@ -5,35 +5,6 @@ GET {{baseUrl}}/categories
 
 
 
-### Récupérer toutes les catégories par défaut
-GET {{baseUrl}}/categories?default=true
-
-### Récupérer les catégories d'un utilisateur
-GET {{baseUrl}}/categories?id_user=1
-
 ### Récupérer une catégorie
-GET {{baseUrl}}/categories/8
-### Créer une catégorie
-POST {{baseUrl}}/categories
-Content-Type: application/json
+GET {{baseUrl}}/categories/24
 
-{
-  "name": "Sport",
-  "color": "#8B5CF6",
-  "icon": "car",
-  "type": "EXPENSE",
-  "is_default": false
-  
-}
-
-### Modifier une categorie
-PATCH {{baseUrl}}/categories/9
-Content-Type: application/json
-
-{
-  "name": "Logement",
-  "color": "#3B82F6"
-}
-
-### Supprimer une catégorie
-DELETE {{baseUrl}}/categories/16
