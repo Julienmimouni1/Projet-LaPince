@@ -8,13 +8,16 @@ export interface RegisterFormData {
   password: string;
 } 
 
-//C'est la forme de l'utilisateur après que le back a répondu. 
-// Quand l'inscription réussit, le serveur renvoie les infos du compte créé — mais sans le mot de passe, jamais
+// On ne met JAMAIS le mot de passe ni les refreshTokens dans l'interface Front-end !
+// C'est une règle de sécurité absolue (CP6).
 export interface AuthUser {
-  id: string;
-  first_name: string;
+  id: number;
+  first_name: string; // Attention au snake_case imposé par ton modèle Prisma
   last_name: string;
   email: string;
+  photo: string | null; // Peut être null selon Prisma (String?)
+  createdAt: string; // En JSON, les dates arrivent sous forme de string (ISO 8601)
+  updatedAt: string;
 }
 
 // C'est la forme de l'erreur que le serveur peut renvoyer en cas de problème, par exemple si l'email est déjà utilisé ou si le mot de passe est trop court.

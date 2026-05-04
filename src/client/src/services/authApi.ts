@@ -7,14 +7,24 @@ export interface LoginCredentials {
 }
 
 export interface AuthResponse {
-  token : string; // Le token d'authentification (JWT) que le serveur renvoie en cas de connexion réussie. Ce token doit être stocké côté client (dans un cookie httpOnly) et envoyé avec les requêtes suivantes pour prouver que l'utilisateur est authentifié.
-  user : AuthUser; // L'utilisateur connecté, avec ses infos (id, prénom, nom, email) mais jamais le mot de passe. C'est ce que le serveur renvoie quand la connexion réussit.
+  // Le serveur renvoie désormais un objet accessToken contenant le token et sa durée
+  accessToken: {
+    token: string;
+    expiresIn: number;
+  };
+ // Et un objet refreshToken contenant lui aussi le token et sa durée
+  refreshToken: {
+    token: string;
+    expiresIn: number;
+  };
+ // Note : le serveur ne renvoie plus l'utilisateur dans la réponse de connexion, car les infos de l'utilisateur sont désormais récupérées via la route GET /users/me grâce au cookie d'authentification. Cela simplifie la gestion des tokens côté client et améliore la sécurité.
+ //  Si besoin, on peut toujours récupérer les infos de l'utilisateur connecté en appelant fetchCurrentUser() après une connexion réussie.
 }
 
 
 
 // creation d'une fonction registerUser qui a pour rôle d'envoyer les données du formulaire à POST /auth/register et de retourner la réponse du serveur, qui peut être soit un AuthUser en cas de succès, soit un ApiError en cas d'erreur.
-export async function registerUser(formData: RegisterFormData): Promise<AuthUser | ApiError> {
+export async function registerUser(formData: RegisterFormData): Promise<AuthUser> {
     // On utilise fetch pour envoyer une requête POST à l'endpoint /auth/register avec les données du formulaire.
     const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, { // en production on utilise la variable d'environnement VITE_API_BASE_URL pour construire l'URL de l'API, ce qui permet de facilement changer l'URL de l'API sans avoir à modifier le code.
       method: "POST",
@@ -29,9 +39,9 @@ export async function registerUser(formData: RegisterFormData): Promise<AuthUser
       const error: ApiError = await response.json();
       throw error
     }
-    // Si tout va bien, on retourne l'utilisateur crée par le serveur, qui est de type AuthUser.
-    const user: AuthUser = await response.json();
-    return user;
+    // Si tout va bien, on retourne l'utilisateur crée par le serveur, qui est dans data.user.
+    const data = await response.json();
+    return data.user;
   }
 
 
@@ -54,9 +64,25 @@ export async function registerUser(formData: RegisterFormData): Promise<AuthUser
     return authResponse;
   }
 
+// export async function fetchCurrentUser(): Promise<AuthUser> {
+//   // MOCK TEMPORAIRE : On simule la réponse du serveur pour ne pas être bloqué
+//   // À retirer quand l'équipe back-end aura fini la route GET /users
+//   console.log("Mock activé : Simulation de l'utilisateur connecté");
+//   return {
+//     id: 2,
+//     email: "juliennn@youpi.com",
+//     first_name: "Julien",
+//     last_name: "Front",
+//     photo: null,
+//     createdAt: "2023-01-01T00:00:00.000Z",
+//     updatedAt: "2023-01-01T00:00:00.000Z"
+//   };}
 
-  export async function fetchCurrentUser(): Promise<AuthResponse['user']> {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users`, {
+
+
+  // CODE ORIGINAL COMMENTE EN ATTEND LE BACK-END POUR LA VERIFICATION DE SESSION (GET /users/me)
+  export async function fetchCurrentUser(): Promise<AuthUser> {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/me`, {
     method: "GET",
     // INDISPENSABLE : c'est ce qui dit au navigateur d'envoyer le cookie caché au back-end
     credentials: "include", 
@@ -66,8 +92,9 @@ export async function registerUser(formData: RegisterFormData): Promise<AuthUser
     throw new Error("Non authentifié ou session expirée");
   }
 
-  // Le serveur renvoie juste l'objet utilisateur (plus de token !)
-  return response.json(); 
+  // Le serveur nous renvoie { user: { ... } }
+  const data = await response.json();
+  return data.user; 
 }
 
 export async function fetchLogout(): Promise<void> {

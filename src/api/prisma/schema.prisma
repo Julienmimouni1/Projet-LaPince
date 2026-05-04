@@ -1,33 +1,32 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
-//Aucune output personnalisée.
-//✔ Résultat
-//Prisma Client est toujours installé dans le répertoire standard : node_modules/@prisma/client
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
+enum CategoryType {
+  EXPENSE
+  INCOME
+}
+
 model User {
-  id            Int            @id @default(autoincrement())
-  first_name    String
-  last_name     String
-  email         String         @unique
-  password      String
-  photo         String?
+  id         Int     @id @default(autoincrement())
+  first_name String
+  last_name  String
+  email      String  @unique
+  password   String
+  photo      String?
+
+  // Relations
   budgets       Budget[]
   alerts        Alert[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt()
+  transactions  Transaction[]
   refreshTokens RefreshToken[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
 
   @@map("users")
 }
@@ -44,24 +43,66 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
+model Category {
+  id    Int          @id @default(autoincrement())
+  name  String
+  color String?
+  icon  String?
+  type  CategoryType
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  /// Relation avec les transactions
+  transactions Transaction[]
+  budgets      Budget[]
+
+  @@unique([name])
+  @@map("category")
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  amount      Decimal
+  date        DateTime
+  description String?
+
+  // Clés étrangères
+  userId     Int @map("iduser") // Mappé pour garder le nom en BDD
+  categoryId Int @map("idcategory") // Mappé pour garder le nom en BDD
+
+  // Relations
+  category Category @relation(fields: [categoryId], references: [id])
+  User     User     @relation(fields: [userId], references: [id])
+  budget   Budget?  @relation(fields: [budgetId], references: [id])
+  budgetId Int?
+
+  @@map("transactions")
+}
+
 model Budget {
-  id           Int      @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   limit_amount Float
   period       String
   id_category  Int
   userId       Int
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt()
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     Category      @relation(fields: [id_category], references: [id])
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
 
   @@map("budgets")
 }
 
 model Alert {
   id             Int      @id @default(autoincrement())
-  categoryName   String // nom de la catégorie concernée
-  exceededAmount Float // montant du dépassement par rapport au budget
-  isRead         Boolean  @default(false) // alerte lue ou non
+  categoryName   String
+  exceededAmount Float
+  isRead         Boolean  @default(false)
   userId         Int
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())

@@ -1,0 +1,17 @@
+import { z } from "zod";
+
+export const createTransactionSchema = z.object({
+  amount: z.number().positive("Le montant doit être strictement positif"),
+  // Utilisation de la nouvelle syntaxe z.iso.datetime()
+  date: z.iso.datetime({ message: "La date doit être au format ISO 8601" }),
+  description: z.string().max(255, "La description est trop longue").optional(),
+  idcategory: z.number().int().positive("L'ID de la catégorie est invalide"),
+});
+
+export const updateTransactionSchema = createTransactionSchema.partial();
+
+export const transactionQuerySchema = z.object({
+  idcategory: z.coerce.number().int().positive().optional(),
+  startDate: z.iso.datetime().optional(),
+  endDate: z.iso.datetime().optional(),
+});

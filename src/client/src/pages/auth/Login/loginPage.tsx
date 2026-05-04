@@ -14,8 +14,9 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await loginUser(credentials);
-      localStorage.setItem("token", data.token);
+      // Les cookies sont gérés automatiquement par le navigateur car credentials: "include" est utilisé dans authApi
+      await loginUser(credentials);
+      // Redirection vers le dashboard, ce qui déclenchera la vérification de session dans AuthContext
       window.location.href = "/dashboard";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
