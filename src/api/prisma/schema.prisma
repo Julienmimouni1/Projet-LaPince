@@ -58,12 +58,13 @@ model Budget {
 }
 
 model Alert {
-  id        Int      @id @default(autoincrement())
-  message   String
-  isRead    Boolean  @default(false)
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  categoryName   String // nom de la catégorie concernée
+  exceededAmount Float // montant du dépassement par rapport au budget
+  isRead         Boolean  @default(false) // alerte lue ou non
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
 
   @@map("alerts")
 }

@@ -1,7 +1,9 @@
+// controllers/alert.controller.ts
 
 import type { Request, Response } from "express";
 import { prisma } from "../lib/prisma.js";
 
+// Import des classes d'erreurs personnalisées
 import {
   BadRequestError,
   NotFoundError,
@@ -23,6 +25,7 @@ export async function getAlerts(req: Request, res: Response) {
     orderBy: { createdAt: "desc" }, // Trier par date décroissante
   });
 
+  // Renvoi de la liste complète des alertes
   res.json(alerts);
 }
 
@@ -50,6 +53,7 @@ export async function getAlertById(req: Request, res: Response) {
   if (alert.userId !== userId)
     throw new UnauthorizedError("Accès refusé");
 
+  // Renvoi de l'alerte trouvée
   res.json(alert);
 }
 
@@ -65,6 +69,7 @@ export async function markAlertAsRead(req: Request, res: Response) {
 
   if (isNaN(id)) throw new BadRequestError("Identifiant invalide");
 
+  // Vérifier que l'alerte existe
   const alert = await prisma.alert.findUnique({ where: { id } });
 
   if (!alert) throw new NotFoundError("Alerte introuvable");
@@ -109,6 +114,7 @@ export async function deleteAlert(req: Request, res: Response) {
 
   if (isNaN(id)) throw new BadRequestError("Identifiant invalide");
 
+  // Vérifier que l'alerte existe
   const alert = await prisma.alert.findUnique({ where: { id } });
 
   if (!alert) throw new NotFoundError("Alerte introuvable");
