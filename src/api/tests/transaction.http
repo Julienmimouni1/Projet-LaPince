@@ -1,8 +1,8 @@
 ### Variables d'environnement pour le fichier
 @baseUrl = http://localhost:3007
-# /!\ Important : Tu dois d'abord te connecter via ta route login, 
+# /!\ Important : Tu dois d'abord te connecter via ta route login,
 # récupérer le token généré, et le coller ici pour tester.
-@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzU1NDk3OCwiZXhwIjoxNzc3NTU1ODc4LCJhdWQiOiJhY2Nlc3MifQ.XTVfGmTqYC7SNuFDvtKyg8YjUG-o_qAa4rIj70ZaW2Y
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzkwODE5OSwiZXhwIjoxNzc3OTA5MDk5LCJhdWQiOiJhY2Nlc3MifQ.EHFrAouPd2wzIQvWjDjF4HoYT_S1VLiOsYbpGvey8KA
 ### ----------------------------------------------------
 ### 1. GET - Récupérer toutes les transactions
 ### ----------------------------------------------------

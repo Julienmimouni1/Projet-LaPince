@@ -1,28 +1,23 @@
 // Ce fichier contient le contexte global d'authentification de l'application. Il gère l'état de l'utilisateur connecté, les fonctions de connexion et de déconnexion,
 // ainsi que la vérification de session au démarrage de l'application.
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-import type { AuthResponse } from "../services/authApi";
-import { fetchCurrentUser, fetchLogout } from "../services/authApi";
+import { createContext, useContext, useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { fetchCurrentUser, fetchLogout, refreshSession } from '../services/authApi';
+import type { AuthUser } from '../types/auth';
 
 interface AuthContextType {
-  user: AuthResponse["user"] | null;
-  login: (data: AuthResponse["user"]) => void;
+  user: AuthUser | null;
+  login: (userData: AuthUser) => void;
   logout: () => void;
   isAuthenticated: boolean;
-  isInitializing: boolean; // Ajout d'un état de chargement initial
+  isInitializing: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthResponse["user"] | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   // Empêche l'affichage de l'app tant qu'on ne sait pas si l'utilisateur est connecté
   const [isInitializing, setIsInitializing] = useState(true);
 
@@ -33,11 +28,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(currentUser);
       } catch {
         try {
-          await refreshSession(); // tente le refresh
-          const currentUser = await fetchCurrentUser(); // réessaie /users/me
+          await refreshSession();
+          const currentUser = await fetchCurrentUser();
           setUser(currentUser);
         } catch {
-          setUser(null); // refresh aussi échoué → déconnecté
+          setUser(null);
         }
       } finally {
         setIsInitializing(false);
@@ -46,38 +41,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkSession();
   }, []);
 
-  const login = (userData: AuthResponse["user"]) => {
-    // Le token est dans le cookie, on sauvegarde juste l'utilisateur dans l'état React
+  const login = (userData: AuthUser) => {
     setUser(userData);
   };
 
   const logout = async () => {
     try {
-      // Il faut appeler la route de déconnexion du back-end pour qu'il détruise le cookie
       await fetchLogout();
     } finally {
-      // Quoi qu'il arrive, on vide l'état React pour mettre à jour l'affichage
       setUser(null);
     }
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, login, logout, isAuthenticated: !!user, isInitializing }}
-    >
-      {/* On n'affiche les enfants que si l'initialisation est terminée */}
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, isInitializing }}>
       {!isInitializing && children}
     </AuthContext.Provider>
   );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext); // Permet de consommer le contexte dans les composants enfants
+  const context = useContext(AuthContext);
   if (context === undefined) {
-    // Si le contexte n'est pas défini, cela signifie que le hook est utilisé en dehors d'un AuthProvider
-    throw new Error(
-      "useAuth doit être utilisé à l'intérieur d'un AuthProvider",
-    ); // Sécurité pour s'assurer que le hook est utilisé correctement, sinon on jette une erreur explicite.
+    throw new Error("useAuth doit être utilisé à l'intérieur d'un AuthProvider");
   }
   return context;
 }

@@ -21,8 +21,6 @@ export default function LoginPage() {
       await loginUser(credentials);
       const user = await fetchCurrentUser();
       login(user);
-
-      // Navigation SPA sans rechargement → TransactionPage est la page d'accueil.
       navigate("/accueil");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
