@@ -1,10 +1,19 @@
 @baseUrl = http://localhost:3007
-
-### Récupérer toutes les catégories
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzkxOTE4MCwiZXhwIjoxNzc3OTIwMDgwLCJhdWQiOiJhY2Nlc3MifQ.YVFMe-gbG0B1P0iQU_UJaVvLLd89cQSE2cb4bJdcdS4
+### ---------------------------------------------------------
+### 1) Récupérer toutes les catégories
+### ---------------------------------------------------------
 GET {{baseUrl}}/categories
+Authorization: {{token}}
 
 
 
-### Récupérer une catégorie
-GET {{baseUrl}}/categories/24
+
+### Exemple : id = 10
+### ---------------------------------------------------------
+### 3) Récupérer la catégorie par Id
+### ---------------------------------------------------------
+GET {{baseUrl}}/categories/10
+Authorization: {{token}}
+
 

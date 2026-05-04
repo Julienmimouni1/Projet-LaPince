@@ -6,6 +6,7 @@ export const createTransactionSchema = z.object({
   date: z.iso.datetime({ message: "La date doit être au format ISO 8601" }),
   description: z.string().max(255, "La description est trop longue").optional(),
   idcategory: z.number().int().positive("L'ID de la catégorie est invalide"),
+  budgetId: z.number().int().positive().nullable().optional(),
 });
 
 export const updateTransactionSchema = createTransactionSchema.partial();

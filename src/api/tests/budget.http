@@ -2,8 +2,7 @@
 ### VARIABLES
 ### -----------------------------------------
 @baseUrl = http://localhost:3007
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzQ5NDI4MCwiZXhwIjoxNzc3NDk1MTgwLCJhdWQiOiJhY2Nlc3MifQ.sgkhWC0IngZSCMCHTBtnYL8i37YOMOdIzBL_EvRDBX0
-### 1. Récupérer tous les budgets de l'utilisateur
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzkzMjk4MSwiZXhwIjoxNzc3OTMzODgxLCJhdWQiOiJhY2Nlc3MifQ.l970YZrtGFdpySksOo_lhCbbFTLVTZ1dRVJOD1GCxb4
 GET {{baseUrl}}/budgets
 Authorization: {{token}}
 
@@ -15,7 +14,7 @@ Content-Type: application/json
 {
   "limit_amount": 300,
   "period": "monthly",
-  "id_category": 1
+  "id_category": 20
 }
 
 ### 3. Créer un budget avec données invalides → 400
@@ -30,7 +29,7 @@ Content-Type: application/json
 }
 
 ### 4. Récupérer un budget par ID
-GET {{baseUrl}}/budgets/1
+GET {{baseUrl}}/budgets/10
 Authorization: {{token}}
 
 ### 5. Récupérer un budget inexistant → 404

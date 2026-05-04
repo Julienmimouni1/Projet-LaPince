@@ -2,7 +2,7 @@
 @baseUrl = http://localhost:3007
 # /!\ Important : Tu dois d'abord te connecter via ta route login, 
 # récupérer le token généré, et le coller ici pour tester.
-@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzU1NDk3OCwiZXhwIjoxNzc3NTU1ODc4LCJhdWQiOiJhY2Nlc3MifQ.XTVfGmTqYC7SNuFDvtKyg8YjUG-o_qAa4rIj70ZaW2Y
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzkzMjk4MSwiZXhwIjoxNzc3OTMzODgxLCJhdWQiOiJhY2Nlc3MifQ.l970YZrtGFdpySksOo_lhCbbFTLVTZ1dRVJOD1GCxb4
 ### ----------------------------------------------------
 ### 1. GET - Récupérer toutes les transactions
 ### ----------------------------------------------------
@@ -23,10 +23,11 @@ Content-Type: application/json
 Cookie: accessToken={{token}}
 
 {
-  "amount": 55.50,
+  "amount": 600,
   "date": "2026-04-30T10:00:00.000Z",
-  "description": "Plein d'essence",
-  "idcategory": 2
+  "description": "Test Carburant",
+  "idcategory": 20,
+  "budgetId": 16
 }
 
 ### ----------------------------------------------------

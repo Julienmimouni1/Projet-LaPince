@@ -87,9 +87,13 @@ model Budget {
   id_category  Int
   userId       Int
 
-  // Relations
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category     Category      @relation(fields: [id_category], references: [id])
+  // Relation avec l'utilisateur (un budget appartient à un utilisateur)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relation avec la catégorie (un budget concerne une catégorie)
+  category Category @relation(fields: [id_category], references: [id])
+
+  // Relation avec les transactions (un budget peut avoir plusieurs transactions)
   transactions Transaction[]
 
   createdAt DateTime @default(now())

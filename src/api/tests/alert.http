@@ -2,7 +2,7 @@
 ### VARIABLES
 ### -----------------------------------------
 @baseUrl = http://localhost:3007
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3Nzg4Njg0OSwiZXhwIjoxNzc3ODg3NzQ5LCJhdWQiOiJhY2Nlc3MifQ.RBBx-Q5C7qT7Q1HCvJ5GLn2tlvvpV6LqBlxXGb3OISY
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzkzMjk4MSwiZXhwIjoxNzc3OTMzODgxLCJhdWQiOiJhY2Nlc3MifQ.l970YZrtGFdpySksOo_lhCbbFTLVTZ1dRVJOD1GCxb4
 
 
 
@@ -18,7 +18,7 @@ Content-Type: application/json
 ### -----------------------------------------
 ### 2) Récupérer une alerte par ID
 ### -----------------------------------------
-GET {{baseUrl}}/alerts/1
+GET {{baseUrl}}/alerts/2
 Authorization: {{token}}
 Content-Type: application/json
 
@@ -27,7 +27,7 @@ Content-Type: application/json
 ### -----------------------------------------
 ### 3) Marquer une alerte comme lue
 ### -----------------------------------------
-PATCH {{baseUrl}}/alerts/1/read
+PATCH {{baseUrl}}/alerts/2/read
 Authorization: {{token}}
 Content-Type: application/json
 
@@ -45,7 +45,7 @@ Content-Type: application/json
 ### -----------------------------------------
 ### 5) Supprimer une alerte
 ### -----------------------------------------
-DELETE {{baseUrl}}/alerts/1
+DELETE {{baseUrl}}/alerts/2
 Authorization: {{token}}
 Content-Type: application/json
 
