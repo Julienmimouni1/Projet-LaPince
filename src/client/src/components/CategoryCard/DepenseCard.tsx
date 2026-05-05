@@ -4,6 +4,8 @@ import CategorySelect from "./CategorySelect";
 import { fetchCategories } from "../../services/categoryApi.js"; 
 import type { Category } from "../../types/category.js";
 
+import { createTransaction } from "../../services/transactionApi.js";
+
 export default function DepenseCard() {
   // 3. Remplacement du state par un tableau d'objets Category
   const [categories, setCategories] = useState<Category[]>([]);
@@ -25,6 +27,10 @@ export default function DepenseCard() {
     }
     loadCategories();
   }, []);
+
+
+
+
 
   return (
     <div className="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-[#BC8787] flex flex-col items-center justify-center gap-1 md:gap-2 shadow-xl shrink-0">
@@ -52,9 +58,25 @@ export default function DepenseCard() {
 
       {/* Formulaire */}
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e)=> {
           e.preventDefault();
-          console.log("Dépense:", { categorie, transaction, montant, date });
+          try {
+            await createTransaction({
+              amount: Math.abs(Number(montant)), // négatif = dépense
+              date: new Date(date).toISOString(),
+              description: transaction,
+              idcategory : Number(categorie),
+            });
+
+            // Réinitialisation du formulaire
+            setTransaction("");
+            setMontant("");
+            setDate("")
+            setCategorie("");
+            
+          } catch(error) {
+            console.error("Erreur création dépense:", error)
+          }
         }}
         className="flex flex-col items-center gap-1 w-full px-5 md:px-10"
       >
