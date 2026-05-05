@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react"; // 1. Ajout de useEffect
 import CategorySelect from "./CategorySelect";
 // 2. Importation du service et du type
-import { fetchCategories } from "../../services/categoryApi.js"; 
+import { fetchCategories } from "../../services/categoryApi.js";
 import type { Category } from "../../types/category.js";
+import { createTransaction } from "../../services/transactionApi.js";
 
 export default function RevenuCard() {
   // 3. Remplacement du state par un tableau d'objets Category
@@ -12,7 +13,7 @@ export default function RevenuCard() {
   const [montant, setMontant] = useState("");
   const [date, setDate] = useState("");
 
-    // 4. Chargement des données au montage du composant
+  // 4. Chargement des données au montage du composant
   useEffect(() => {
     async function loadCategories() {
       try {
@@ -38,11 +39,11 @@ export default function RevenuCard() {
         />
       </div>
       <div className="absolute top-2 right-6 hidden md:block">
-                <CategorySelect
-                  categories={categories}
-                  value={categorie}
-                  onChange={setCategorie}
-                />
+        <CategorySelect
+          categories={categories}
+          value={categorie}
+          onChange={setCategorie}
+        />
       </div>
 
       {/* Titre */}
@@ -52,9 +53,22 @@ export default function RevenuCard() {
 
       {/* Formulaire */}
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          console.log("Revenu:", { categorie, transaction, montant, date });
+          try {
+            await createTransaction({
+              amount: Math.abs(Number(montant)),
+              date: new Date(date).toISOString(),
+              description: transaction,
+              idcategory: Number(categorie),
+            });
+            setTransaction("");
+            setMontant("");
+            setDate("");
+            setCategorie("");
+          } catch (error) {
+            console.error("Erreur création revenu :", error);
+          }
         }}
         className="flex flex-col items-center gap-1 w-full px-5 md:px-10"
       >
@@ -73,7 +87,9 @@ export default function RevenuCard() {
             onChange={(e) => setMontant(e.target.value)}
             className="flex-1 bg-transparent text-[9px] md:text-[10px] outline-none placeholder:text-gray-500 min-w-0"
           />
-          <span className="text-[9px] md:text-[10px] text-gray-500 shrink-0">€</span>
+          <span className="text-[9px] md:text-[10px] text-gray-500 shrink-0">
+            €
+          </span>
         </div>
         <input
           type="date"

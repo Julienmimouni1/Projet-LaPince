@@ -62,7 +62,7 @@ export default function DepenseCard() {
           e.preventDefault();
           try {
             await createTransaction({
-              amount: Math.abs(Number(montant)), // négatif = dépense
+              amount: Math.abs(Number(montant)),
               date: new Date(date).toISOString(),
               description: transaction,
               idcategory : Number(categorie),
@@ -73,7 +73,7 @@ export default function DepenseCard() {
             setMontant("");
             setDate("")
             setCategorie("");
-            
+
           } catch(error) {
             console.error("Erreur création dépense:", error)
           }
