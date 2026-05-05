@@ -27,6 +27,7 @@ export async function fetchTransactions():Promise<Transaction[]> {
     const response = await fetch(API_URL, {
         method: "GET",
         credentials: "include",
+        cache: "no-store",
     });
     if(!response.ok) {
         throw new Error(`Erreur${response.status} : Impossible de récuperer les transactions`);
