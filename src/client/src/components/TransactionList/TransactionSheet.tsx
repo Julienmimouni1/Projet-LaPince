@@ -85,7 +85,7 @@ export default function TransactionSheet({ transactions, footerHeight }: Props) 
                     // Donc seuls les 56 px du haut restent visibles à l'ecran
                     transform: isOpen ? "translateY(0)" : `translateY(calc(85vh - ${COLLAPSED_HEIGHT}px))`,
                 }}
-                className="fixed bottom-0 left-0 w-full bg-[#1e3a5f] text-white rounded-t-2xl shadow-2xl flex flex-col z-40 transition-transform duration-300 ease-in-out"
+                className="fixed bottom-0 left-0 w-full bg-[#1e3a5f] text-white rounded-t-2xl shadow-2xl flex flex-col z-[55] transition-transform duration-300 ease-in-out"
                     // Note : "transition-transform" dans TailWind correspond à "transition-property:  transform" en CSS.
                     // Sans ça, le panneau se téléporterait d'une psoition à l'autre sans animation. 
                 

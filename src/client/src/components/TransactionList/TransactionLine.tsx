@@ -23,9 +23,9 @@ function formatDate(iso: string): string {
 // replace("." , ",") -> conventuion française
 
 
-function formatAmount(amount:number) : string {
-    const formatted = Math.abs(amount).toFixed(2).replace(".",",");
-    return amount >=0 ? `+${formatted}€` : `-${formatted}€`
+function formatAmount(amount: number, type: "EXPENSE" | "INCOME"): string {
+  const formatted = Math.abs(amount).toFixed(2).replace(".", ",");
+  return type === "INCOME" ? `+${formatted}€` : `-${formatted}€`;
 }
 
 
@@ -38,7 +38,7 @@ export default function TransactionLine({ transaction }: Props) {
     // On calcule isRevenu une seule fois et on l'utilise pour les deux classes CSS.
     // On évite de répeter "transaction.amount >= 0" deux fois dans le jsx
 
-    const isRevenu = transaction.amount >= 0;
+    const isRevenu = transaction.category.type === "INCOME";
 
     return(
         <div className="flex items-center gap-3 py-2 px-4 border-b border-white/10">
@@ -66,7 +66,7 @@ export default function TransactionLine({ transaction }: Props) {
 
             {/* Montant tout à droite, même couleur que la pastille pour la cohérence visuelle. */}
             <span className={`text-sm font-bold shrink-0 ${isRevenu ? "text-[#74BAC2]" : "text-[#BC8787]"}`}>
-                {formatAmount(transaction.amount)}
+                {formatAmount(transaction.amount, transaction.category.type)}
             </span>
 
 

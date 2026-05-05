@@ -72,9 +72,9 @@ export default function TransactionPage() {
     return () => observer.disconnect();
   }, []);
 
-  const transactionsTried = [...MOCK_TRANSACTIONS].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
+const transactionsSorted = [...transactions].sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+);
 
   function handleCloseAlert() {
     if (currentAlertIndex === null) return;
@@ -183,10 +183,10 @@ export default function TransactionPage() {
         />
       )}
       <TransactionSheet
-        transactions={transactionsTried}
+        transactions={transactionsSorted}
         footerHeight={footerHeight}
       />
-      <footer ref={footerRef} className="absolute bottom-0 left-0 w-full z-50">
+      <footer ref={footerRef} className="absolute bottom-0 left-0 w-full z-[60]">
         <Footer showIcons activeIds={["landingpage", "params"]} />
       </footer>
     </main>
