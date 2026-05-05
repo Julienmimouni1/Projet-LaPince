@@ -1,0 +1,51 @@
+services:
+
+  # --- Base de données PostgreSQL ---
+  db:
+    image: postgres:17
+    restart: unless-stopped  # Redémarre automatiquement sauf si arrêt manuel
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}         # Nom d'utilisateur (depuis .env)
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Mot de passe (depuis .env)
+      POSTGRES_DB: ${POSTGRES_DB}             # Nom de la base de données
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persiste les données entre les redémarrages
+    healthcheck:
+      # Vérifie que Postgres est prêt à accepter des connexions avant de démarrer les autres services
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s     # Vérifie toutes les 10 secondes
+      timeout: 5s       # Échoue si la réponse prend plus de 5s
+      retries: 5        # 5 tentatives avant de considérer le service comme "unhealthy"
+      start_period: 20s # Laisse 20s au démarrage avant de commencer les vérifications
+
+  # --- API Node.js (backend) ---
+  api:
+    build:
+      context: ./src/api
+      dockerfile: api.Dockerfile  # Dockerfile de dev : lance tsx --watch (hot reload)
+    environment:
+      NODE_ENV: production           # production | development
+      DATABASE_URL: ${DATABASE_URL}   # URL de connexion à Postgres
+      PORT: ${API_PORT}               # Port interne sur lequel l'API écoute
+      JWT_SECRET: ${JWT_SECRET}       # Clé secrète pour signer les tokens JWT
+      CORS_ORIGIN: ${CORS_ORIGIN}     # Origine autorisée pour les requêtes CORS
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS} # Liste des origines autorisées pour les requêtes CORS (séparées par des virgules)
+    depends_on:
+      db:
+        condition: service_healthy  # Démarre l'API seulement quand Postgres est prêt
+
+  # --- Client React/Vite (frontend) ---
+  client:
+    build:
+      context: ./src/client
+      dockerfile: client.Dockerfile     
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}   # ← injecté au moment du build
+    ports:
+      - "${CLIENT_LOCAL_PORT}:80"       # ← Nginx écoute sur le port 80
+    restart: unless-stopped
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
