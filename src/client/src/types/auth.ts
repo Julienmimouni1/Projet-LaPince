@@ -6,6 +6,7 @@ export interface RegisterFormData {
   last_name: string;
   email: string;
   password: string;
+  photo?: string;
 } 
 
 // On ne met JAMAIS le mot de passe ni les refreshTokens dans l'interface Front-end !

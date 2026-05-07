@@ -1,5 +1,5 @@
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import { useState } from "react"
+import { useState } from "react";
 import { cn } from "../../lib/utils";
 import type { RegisterFormData, ApiError } from "../../types/auth";
 
@@ -22,8 +22,8 @@ export default function RegisterForm({
   isLoading,
   error,
 }: RegisterFormProps) {
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirm, setShowConfirm] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   /**
    * Gère la soumission du formulaire et extrait les valeurs des champs.
    */
@@ -94,47 +94,58 @@ export default function RegisterForm({
 
           {/* Champ de saisie accessible */}
           <div className="flex items-center gap-2">
-          <input
-            id={field.id}
-            name={field.id}
-            type={field.type}
-            placeholder={field.placeholder}
-            disabled={isLoading}
-            aria-invalid={error?.field === field.id}
-            aria-describedby={
-              error?.field === field.id ? `${field.id}-error` : undefined
-            }
-            className={cn(
-              "w-full px-4 py-2.5 rounded-full bg-white/80 border-none text-[13px] shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
-              error?.field === field.id && "ring-2 ring-red-400",
-            )}
-            required
-          />
+            <input
+              id={field.id}
+              name={field.id}
+              type={field.type}
+              placeholder={field.placeholder}
+              disabled={isLoading}
+              aria-invalid={error?.field === field.id}
+              aria-describedby={
+                error?.field === field.id ? `${field.id}-error` : undefined
+              }
+              className={cn(
+                "w-full px-4 py-2.5 rounded-full bg-white/80 border-none text-[13px] shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+                error?.field === field.id && "ring-2 ring-red-400",
+              )}
+              required
+            />
 
-{/* On va afficher le bouton que pour les champs password et confirm*/} 
-{/* Pour inverser les états : on passe de true à false ou inversement pour afficher ou masquer */}
-  {(field.id === "password" || field.id === "confirm") && (
-   
-    <button
-      type="button"
-      onMouseDown={() =>
-        field.id === "password" ? setShowPassword(true) : setShowConfirm(true)
-      }
-      onMouseUp={() =>
-        field.id === "password" ? setShowPassword(false) : setShowConfirm(false)
-      }
-      onMouseLeave={() =>
-        field.id === "password" ? setShowPassword(false) : setShowConfirm(false)
-      }
-    >
-      {field.id === "password" ? (
-        showPassword ? <EyeOff size={16} /> : <Eye size={16} />
-      ) : (
-        showConfirm ? <EyeOff size={16} /> : <Eye size={16} />
-      )}
-    </button>
-  )}
-</div>
+            {/* On va afficher le bouton que pour les champs password et confirm*/}
+            {/* Pour inverser les états : on passe de true à false ou inversement pour afficher ou masquer */}
+            {(field.id === "password" || field.id === "confirm") && (
+              <button
+                type="button"
+                onMouseDown={() =>
+                  field.id === "password"
+                    ? setShowPassword(true)
+                    : setShowConfirm(true)
+                }
+                onMouseUp={() =>
+                  field.id === "password"
+                    ? setShowPassword(false)
+                    : setShowConfirm(false)
+                }
+                onMouseLeave={() =>
+                  field.id === "password"
+                    ? setShowPassword(false)
+                    : setShowConfirm(false)
+                }
+              >
+                {field.id === "password" ? (
+                  showPassword ? (
+                    <EyeOff size={16} />
+                  ) : (
+                    <Eye size={16} />
+                  )
+                ) : showConfirm ? (
+                  <EyeOff size={16} />
+                ) : (
+                  <Eye size={16} />
+                )}
+              </button>
+            )}
+          </div>
 
           {/* Message d'erreur accessible */}
           {error?.field === field.id && (
@@ -148,7 +159,6 @@ export default function RegisterForm({
           )}
         </div>
       ))}
-
       {/* Bouton de validation */}
       <div className="flex justify-center">
         <button

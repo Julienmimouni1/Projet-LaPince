@@ -1,24 +1,14 @@
+import type { Transaction } from "../types/transaction";
+
 const API_URL = `${import.meta.env.VITE_API_BASE_URL}/transactions`;
+
+export type { Transaction };
 
 export interface TransactionPayload {
     amount: number;
     date: string;
     description: string;
     idcategory: number;
-}
-
-export interface Transaction {
-    id: number;
-    amount: number;
-    date: string;
-    description: string | null;
-    userId: number;
-    categoryId: number;
-    category: {
-        id: number;
-        name: string;
-        type: "EXPENSE" | "INCOME"
-    };
 }
 
 // GET transactions - toutes les transactions de l'utilisateur connecté

@@ -6,9 +6,11 @@ export default function PrivateLayout() {
   const { user } = useAuth();
 
   const avatar = (size: string) => (
-    <div className={`${size} rounded-full border-2 border-white shadow-lg overflow-hidden shrink-0`}>
+    <div
+      className={`${size} rounded-full border-2 border-white shadow-lg overflow-hidden shrink-0`}
+    >
       <img
-        src="/WEBP/Desktop/Lapince-Profil-Picture-Desktop.webp"
+        src={user?.photo ?? "/WEBP/Desktop/Lapince-Profil-Picture-Desktop.webp"}
         className="w-full h-full object-cover"
         alt="Photo de profil"
       />
@@ -16,7 +18,9 @@ export default function PrivateLayout() {
   );
 
   const namePill = (textSize: string, px: string, py: string) => (
-    <div className={`bg-white/80 backdrop-blur-sm rounded-full ${px} ${py} text-[#002b49] font-bold ${textSize} whitespace-nowrap shadow-sm`}>
+    <div
+      className={`bg-white/80 backdrop-blur-sm rounded-full ${px} ${py} text-[#002b49] font-bold ${textSize} whitespace-nowrap shadow-sm`}
+    >
       {user?.first_name} {user?.last_name}
     </div>
   );

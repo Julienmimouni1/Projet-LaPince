@@ -6,31 +6,28 @@ import Footer from "../../components/Footer/footer";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
-  const [photo, setPhoto] = useState<File | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null); // chaîne de caractère ou null 
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<string>("");
+  const [showPicker, setShowPicker] = useState(false);
+  const [avatarSeeds] = useState<string[]>(() =>
+    Array.from({ length: 8 }, () => Math.random().toString(36).slice(2, 10))
+  );
 
   const handleSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
     setError(null);
-
     try {
-      const user = await registerUser(data);
-    
-
+      const user = await registerUser({ ...data, photo: selectedAvatar || undefined });
       setSuccessMessage("Inscription réalisée avec succès !");
-
-      
       setTimeout(() => {
         login(user);
-      navigate("/accueil");
-    }, 2000);
-
+        navigate("/accueil");
+      }, 2000);
     } catch (err) {
       setError(err as ApiError);
     } finally {
@@ -59,20 +56,25 @@ export default function RegisterPage() {
             alt=""
           />
         </div>
-        <div className="hidden 2xl:block absolute top-[55%] left-[5%] -translate-y-1/2 z-30 pointer-events-none max-w-[400px]">
-          <p className="text-[35px] font-black leading-tight uppercase italic opacity-80">
-            Créez votre compte Gratuit,
-            <br />
-            sans connexion bancaire,
-            <br />
-            sans prise de tête.
-          </p>
-        </div>
         <img
           src="/WEBP/Desktop/Lapince-Logo-Desktop.webp"
-          className="absolute top-10 left-20 w-24 lg:w-60 z-50 transition-all"
+          className="absolute top-10 left-15 w-24 lg:w-60 z-50 transition-all"
           alt="Logo"
         />
+        <div className="absolute z-50 left-0 w-full md:pl-14 lg:pl-16 pointer-events-none pt-20">
+          <header className="max-w-[700px] md:mt-56 shrink-0 text-left md:pl-28">
+            <h2 className="text-[50px] lg:text-[65px] font-medium leading-[0.9] tracking-tighter text-[#002b49]">
+              Créez votre
+              <br />
+              compte.
+            </h2>
+            <p className="text-[17px] lg:text-[21px] font-normal text-[#002b49] opacity-90 mt-6 max-w-[450px] leading-snug">
+              <span className="font-bold">La Pince,</span> sans connexion bancaire,
+              <br />
+              sans prise de tête.
+            </p>
+          </header>
+        </div>
       </div>
 
       {/* ------------------------------------------------------------ */}
@@ -92,7 +94,7 @@ export default function RegisterPage() {
         <img
           src="/WEBP/Mobile/Lapince-Logo-Mobile.webp"
           className="absolute top-6 left-6 w-28 z-50"
-          alt="Logo"
+          alt="Logo Mobile"
         />
       </div>
 
@@ -105,75 +107,69 @@ export default function RegisterPage() {
       {/* ------------------------------------------------------------ */}
       {/* 3. ZONE DE CONTENU (L'essentiel - Z-40)                      */}
       {/* ------------------------------------------------------------ */}
-      {/* C'est ici que le scroll se passe, exactement comme sur LandingPage */}
       <div className="absolute inset-0 z-40 overflow-y-auto flex flex-col items-center pt-2 pb-5 px-4 scrollbar-hide">
-        {/* Titre Inscription */}
-        <header className="text-center mt-12 mb-8 shrink-0 ">
-          <h1 className="text-[26px] translate-x-[60px] md:translate-x-[0px] md:text-[50px] font-black italic uppercase leading-none tracking-tighter">
+
+        {/* Titre */}
+        <header className="text-center mt-12 mb-8 shrink-0">
+          <h1 className="text-[35px] md:text-[50px] lg:text-[60px] font-black uppercase leading-none tracking-tighter">
             Inscription
           </h1>
         </header>
 
-        {/* SECTION PHOTO (Avatar) */}
+        {/* Avatar */}
         <div className="relative mb-6 shrink-0">
-          <label htmlFor="av-reg" className="cursor-pointer block">
-            <input
-              type="file"
-              id="av-reg"
-              className="hidden"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) setPhoto(file);
-              }}
+          <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/50 backdrop-blur-md border-2 border-white flex items-center justify-center shadow-2xl overflow-hidden">
+            <img
+              src={selectedAvatar || `https://api.dicebear.com/9.x/lorelei/svg?seed=${avatarSeeds[0]}`}
+              className={`w-full h-full object-cover ${selectedAvatar ? "" : "opacity-20"}`}
+              alt="Aperçu"
             />
-            <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/50 backdrop-blur-md border-2 border-white flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-[#002b49] transition-all">
-              <img
-                src={
-                  photo
-                    ? URL.createObjectURL(photo)
-                    : "/WEBP/Desktop/Lapince-Profil-Picture-Desktop.webp"
-                }
-                className="w-full h-full object-cover"
-                alt="Aperçu"
-              />
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowPicker(!showPicker)}
+            className="absolute bottom-1 right-1 bg-[#002b49] text-white p-2 rounded-full border-2 border-white shadow-lg hover:scale-110 transition-transform"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="4">
+              <path d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+
+          {showPicker && (
+            <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/50 z-50">
+              <div className="flex flex-wrap justify-center gap-3 w-64">
+                {avatarSeeds.map((seed) => {
+                  const url = `https://api.dicebear.com/9.x/lorelei/svg?seed=${seed}`;
+                  return (
+                    <button
+                      key={seed}
+                      type="button"
+                      onClick={() => { setSelectedAvatar(url); setShowPicker(false); }}
+                      className={`w-12 h-12 rounded-full border-2 overflow-hidden transition-all hover:scale-110 ${selectedAvatar === url ? "border-[#002b49]" : "border-transparent"}`}
+                    >
+                      <img src={url} alt={seed} className="w-full h-full" />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            <div className="absolute bottom-1 right-1 bg-[#002b49] text-white p-2 rounded-full border-2 border-white shadow-lg group-hover:scale-110 transition-transform">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth="4"
-              >
-                <path d="M12 4v16m8-8H4" />
-              </svg>
-            </div>
-          </label>
+          )}
         </div>
 
-
-
-
-
-
-        {/* Cadre du Formulaire */}
-        <section className="w-full max-w-[440px] bg-white/20 backdrop-blur-3xl rounded-[2.5rem] p-6 md:p-10 shadow-2xl border border-white/30 mb-8 shrink-0 relative">
-          <RegisterForm
-            onSubmit={handleSubmit}
-            isLoading={isLoading}
-            error={error}
-          />
+        {/* Formulaire */}
+        <section className="w-full max-w-[440px] min-h-[340px] flex flex-col justify-center bg-white/20 backdrop-blur-3xl rounded-[2.5rem] p-6 md:p-10 shadow-2xl border border-white/30 mb-8 shrink-0">
+          {successMessage ? (
+            <p className="text-center text-xl font-black text-[#002b49]">
+              ✓ {successMessage}
+            </p>
+          ) : (
+            <RegisterForm
+              onSubmit={handleSubmit}
+              isLoading={isLoading}
+              error={error}
+            />
+          )}
         </section>
-
-   
-             {/* Message suivant l'inscription */}
-      {successMessage && (
-  <p className="text-sm font-bold text-black-700 mb-10">
-    {successMessage}
-  </p>
-      )}   
-
 
         {/* Lien de redirection */}
         <p className="text-sm font-bold shrink-0 mb-10">
@@ -182,8 +178,8 @@ export default function RegisterPage() {
             Se connecter
           </a>
         </p>
-        </div>
 
+      </div>
 
       {/* ------------------------------------------------------------ */}
       {/* 4. FOOTER                                                    */}
@@ -195,5 +191,3 @@ export default function RegisterPage() {
     </main>
   );
 }
-  
-
