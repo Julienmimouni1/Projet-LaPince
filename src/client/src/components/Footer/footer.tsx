@@ -68,9 +68,12 @@ export default function Footer({
       <footer className="md:hidden w-full h-[35px] bg-white flex items-center px-4 relative border-t border-gray-100">
         {/* Affichage des Mentions Légales si aucune icône n'est active */}
         {!showIcons || visibleItems.length === 0 ? (
-          <p className="w-full text-center text-[9px] font-bold text-[#002b49] opacity-70 uppercase">
+          <a
+            href="/mentions-legales"
+            className="w-full text-center text-[9px] font-bold text-[#002b49] opacity-70 uppercase hover:opacity-100 transition-opacity"
+          >
             Mentions légales
-          </p>
+          </a>
         ) : (
           /* Affichage dynamique des icônes sélectionnées */
           <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-15">
@@ -95,15 +98,16 @@ export default function Footer({
       {/* ------------------------------------------------------------ */}
       <footer className="hidden md:flex w-full h-[50px] bg-white items-center px-10 relative border-t border-gray-100">
         {/* Texte aligné à gauche si icônes présentes, sinon centré */}
-        <p
-          className={`text-[11px] font-bold text-[#002b49] opacity-70 uppercase ${
+        <a
+          href="/mentions-legales"
+          className={`text-[11px] font-bold text-[#002b49] opacity-70 uppercase hover:opacity-100 transition-opacity ${
             showIcons && visibleItems.length > 0
               ? "text-left"
               : "w-full text-center"
           }`}
         >
           Mentions légales
-        </p>
+        </a>
 
         {/* Bloc central des icônes sélectionnées */}
         {showIcons && visibleItems.length > 0 && (

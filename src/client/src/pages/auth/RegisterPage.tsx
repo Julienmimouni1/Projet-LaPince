@@ -19,7 +19,7 @@ export default function RegisterPage() {
     setError(null);
     try {
       const user = await registerUser(data);
-      login(user);
+      login(user);            
       navigate("/accueil");
     } catch (err) {
       setError(err as ApiError);

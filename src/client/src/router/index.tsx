@@ -6,9 +6,9 @@ import TransactionPage from "../pages/Transaction/TransactionPage";
 import ParametrePage from "../pages/Parametre/ParametrePage";
 import PrivateRoute from "../components/PrivateRoute";
 import PrivateLayout from "../components/Layout/PrivateLayout";
+import MentionsLegalesPage from "../pages/MentionsLegales/MentionsLegalesPage";
 
 export const router = createBrowserRouter([
-
   // --- ROUTES PUBLIQUES ---
   {
     path: "/",
@@ -22,13 +22,17 @@ export const router = createBrowserRouter([
     path: "/register",
     element: <RegisterPage />,
   },
+  {
+    path: "/mentions-legales",
+    element: <MentionsLegalesPage />,
+  },
 
   // --- ROUTES PRIVÉES ---
   {
-    element: <PrivateRoute />,       // vérifie l'auth
+    element: <PrivateRoute />, // vérifie l'auth
     children: [
       {
-        element: <PrivateLayout />,  // ajoute le bouton logout sur toutes les pages enfants
+        element: <PrivateLayout />, // ajoute le bouton logout sur toutes les pages enfants
         children: [
           {
             path: "/accueil",
@@ -39,10 +43,6 @@ export const router = createBrowserRouter([
           {
             path: "/parametres",
             element: <ParametrePage />,
-          },
-          {
-            path: "/mentions-legales",
-            element: <div>Page des mentions légales</div>,
           },
         ],
       },

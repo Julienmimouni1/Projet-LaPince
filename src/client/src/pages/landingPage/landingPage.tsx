@@ -1,9 +1,5 @@
 import Footer from "../../components/Footer/footer";
 
-/**
- * LandingPage - Version Intégrale
- * Alignement centré pour le contenu et correction des visuels.
- */
 export default function LandingPage() {
   // Style du bouton blanc "S'inscrire"
   const mainButtonStyle =
@@ -27,7 +23,7 @@ export default function LandingPage() {
           alt=""
         />
 
-        {/* Illustration Femme (ou Main) - Ajustée à droite */}
+        {/* Illustration Femme - Ajustée à droite */}
         <div className="absolute bottom-0 right-40 z-30 pointer-events-none select-none h-[95vh]">
           <img
             src="/WEBP/Desktop/Lapince-Hero-Woman-Desktop.webp"

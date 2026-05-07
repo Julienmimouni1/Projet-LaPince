@@ -1,1 +1,0 @@
-POST /auth/register avec le flux complet de création d'utilisateur.
