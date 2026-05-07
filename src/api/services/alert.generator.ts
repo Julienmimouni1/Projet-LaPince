@@ -40,10 +40,9 @@ export const generateBudgetAlert = async (budgetId: number, userId: number) => {
   const transactionsForCategory = await prisma.transaction.findMany({
     where: { userId, categoryId: budget.category.id },
   });
-  // Les dépenses sont stockées en négatif (-45.50) → on filtre et prend la valeur absolue
+  // Les dépenses sont stockées en positif → on somme directement
   const spent = transactionsForCategory
-    .filter((t) => Number(t.amount) < 0)
-    .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
+    .reduce((sum, t) => sum + Number(t.amount), 0);
 
   // 3. Si le budget n'est pas dépassé → aucune alerte
   if (spent <= budget.limit_amount) return null;

@@ -7,6 +7,7 @@ import ParametrePage from "../pages/Parametre/ParametrePage";
 import PrivateRoute from "../components/PrivateRoute";
 import PrivateLayout from "../components/Layout/PrivateLayout";
 import MentionsLegalesPage from "../pages/MentionsLegales/MentionsLegalesPage";
+import DashboardPage from "../pages/Dashboard/DashboardPage";
 
 export const router = createBrowserRouter([
   // --- ROUTES PUBLIQUES ---
@@ -38,11 +39,14 @@ export const router = createBrowserRouter([
             path: "/accueil",
             element: <TransactionPage />,
             // C'est la page d'accueil après login.
-            // Le login redirigera ici (étape 4).
           },
           {
             path: "/parametres",
             element: <ParametrePage />,
+          },
+          {
+            path: "/dashboard",
+            element: <DashboardPage />,
           },
         ],
       },
