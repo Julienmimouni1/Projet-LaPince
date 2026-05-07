@@ -9,7 +9,7 @@ export function generateAuthTokens(user: User) {
   };
 
   const accessToken = jwt.sign(payload, config.jwtSecret, {
-    expiresIn: "15m",
+    expiresIn: "45m",
     audience: "access",
   });
   const refreshToken = jwt.sign(payload, config.jwtSecret, {
@@ -20,7 +20,7 @@ export function generateAuthTokens(user: User) {
   return {
     accessToken: {
       token: accessToken,
-      expiresIn: 15 * 60 * 1000,
+      expiresIn: 45 * 60 * 1000,
     },
     refreshToken: {
       token: refreshToken,

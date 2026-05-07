@@ -192,7 +192,7 @@ const transactionsSorted = [...transactions].sort(
         footerHeight={footerHeight}
       />
       <footer ref={footerRef} className="absolute bottom-0 left-0 w-full z-[60]">
-        <Footer showIcons activeIds={["landingpage", "params"]} />
+        <Footer showIcons activeIds={["landingpage", "params", "dashboard"]} />
       </footer>
     </main>
   );

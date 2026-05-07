@@ -1,5 +1,5 @@
 import { Router } from "express"
-
+import { authMiddleware } from "../middlewares/access.controller.middleware.ts";
 import { getAllCategory, getOneCategory } from "../controllers/category.controller.ts"
 
 
@@ -8,8 +8,8 @@ import { getAllCategory, getOneCategory } from "../controllers/category.controll
 
 const router = Router();
 
-router.get("/",  getAllCategory);
-router.get("/:id",  getOneCategory);
+router.get("/",authMiddleware, getAllCategory);
+router.get("/:id",authMiddleware, getOneCategory);
 
 
 
