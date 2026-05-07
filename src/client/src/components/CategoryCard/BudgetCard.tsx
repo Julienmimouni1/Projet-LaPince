@@ -19,8 +19,8 @@ export default function BudgetCard() {
 
   //Budget
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [_isLoading, setIsLoading] = useState(false);
+  const [_error, setError] = useState<string | null>(null);
 
     // 4. Chargement des données au montage du composant
   useEffect(() => {

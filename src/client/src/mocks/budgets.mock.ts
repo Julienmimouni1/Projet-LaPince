@@ -1,37 +1,36 @@
 import type { Budget } from "../types/bugdet"
 
-
-// MOCK_TRANSACTIONS contient :
-//   Supermarché U     → -45,50€ (catégorie "Alimentation")
-//   Abonnement Ciné   → -19,90€ (catégorie "Loisirs")
-//
-// Plafonds intentionnellement bas pour déclencher les alertes :
-//   Alimentation : limit_amount 40€  → exceededAmount = 5,50€
-//   Loisirs      : limit_amount 10€  → exceededAmount = 9,90€
-
+// Plafonds intentionnellement bas pour déclencher les alertes
+// avec les MOCK_TRANSACTIONS (Alimentation 45.50€ > 40€, Loisirs 19.90€ > 10€)
 export const MOCK_BUDGETS: Budget[] = [
   {
     id: 1,
-    limit_amount: 40,       // ← nom du champ Prisma
-    period: "2024-04",      // ← nom du champ Prisma
-    id_category: 2,         // ← correspond à categoryId: 2 dans les transactions mock
+    limit_amount: 40,
+    period: "monthly",
+    id_category: 2,
     userId: 1,
-    categoryName: "Alimentation", // commodité mock — pour matcher t.category.name
+    createdAt: "2024-04-01T00:00:00.000Z",
+    updatedAt: "2024-04-01T00:00:00.000Z",
+    category: { id: 2, name: "Alimentation", type: "EXPENSE" },
   },
   {
     id: 2,
     limit_amount: 10,
-    period: "2024-04",
+    period: "monthly",
     id_category: 3,
     userId: 1,
-    categoryName: "Loisirs",
+    createdAt: "2024-04-01T00:00:00.000Z",
+    updatedAt: "2024-04-01T00:00:00.000Z",
+    category: { id: 3, name: "Loisirs", type: "EXPENSE" },
   },
   {
     id: 3,
-    limit_amount: 50, // Télépéage = 2,90€ → pas de dépassement, pas d'alerte
-    period: "2024-04",
+    limit_amount: 50,
+    period: "monthly",
     id_category: 4,
     userId: 1,
-    categoryName: "Transport",
+    createdAt: "2024-04-01T00:00:00.000Z",
+    updatedAt: "2024-04-01T00:00:00.000Z",
+    category: { id: 4, name: "Transport", type: "EXPENSE" },
   },
 ];

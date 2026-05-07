@@ -30,7 +30,7 @@ export function computeAlerts(
     for (const budget of budgets) {
         // on utilisebudget.categoryName (champ de commodité mock) pour retrouver les dépenses. En producition, ce serait JSON SQL coté back.
 
-        const spent = spendingByCategory.get(budget.categoryName) ?? 0;
+        const spent = spendingByCategory.get(budget.category.name) ?? 0;
 
         if (spent <= budget.limit_amount) continue; // pas de dépassement
 
@@ -40,7 +40,7 @@ export function computeAlerts(
 
         alerts.push({
             id: budget.id,
-            categoryName: budget.categoryName,
+            categoryName: budget.category.name,
             exceededAmount,
             isRead: false,
             userId: budget.userId,
