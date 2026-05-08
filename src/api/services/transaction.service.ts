@@ -8,7 +8,7 @@ import { prisma } from "../lib/prisma.js";
 // --- 1. Récupérer toutes les transactions avec les filtres ---
 export const getAllTransactions = async (
   userId: number,
-  filters: { idcategory?: number; startDate?: string; endDate?: string; page: number; limit: number },
+  filters: { idcategory?: number | undefined; startDate?: string | undefined; endDate?: string | undefined; page: number; limit: number },
 ) => {
   const where = {
     userId,

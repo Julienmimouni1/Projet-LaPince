@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { getOverview } from "./stats.service";
+import { getOverview } from "./stats.service.js";
 import { prisma } from "../lib/prisma.js";
 
 vi.mock("../lib/prisma.js", () => ({
