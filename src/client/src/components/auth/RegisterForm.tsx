@@ -116,20 +116,10 @@ export default function RegisterForm({
             {(field.id === "password" || field.id === "confirm") && (
               <button
                 type="button"
-                onMouseDown={() =>
+                onClick={() =>
                   field.id === "password"
-                    ? setShowPassword(true)
-                    : setShowConfirm(true)
-                }
-                onMouseUp={() =>
-                  field.id === "password"
-                    ? setShowPassword(false)
-                    : setShowConfirm(false)
-                }
-                onMouseLeave={() =>
-                  field.id === "password"
-                    ? setShowPassword(false)
-                    : setShowConfirm(false)
+                    ? setShowPassword(prev => !prev)
+                    : setShowConfirm(prev => !prev)
                 }
               >
                 {field.id === "password" ? (

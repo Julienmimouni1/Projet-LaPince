@@ -75,9 +75,7 @@ export default function LoginForm({
           />
           <button
             type="button"
-            onMouseDown={() => setShowPassword(true)}
-            onMouseUp={() => setShowPassword(false)}
-            onMouseLeave={() => setShowPassword(false)}
+            onClick={() => setShowPassword(prev => !prev)}
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
