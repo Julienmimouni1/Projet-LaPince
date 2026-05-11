@@ -167,7 +167,7 @@ export default function TransactionSheet({ transactions, footerHeight }: Props) 
                         className={`text-white/70 transition-transform duration-300 group-hover:text-white ${isOpen ? "rotate-180" : ""}`}
                     />
                     <p className="text-xs font-bold uppercase tracking-widest text-white/70 group-hover:text-white transition-colors whitespace-nowrap">
-                        Toutes mes transactions
+                        Transactions
                     </p>
 
                     {/* BARRE DE RECHERCHE 
