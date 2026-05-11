@@ -76,7 +76,7 @@ export default function RevenuCard({ onSuccess }: { onSuccess?: () => void }) {
             >
               <input
                 type="text"
-                placeholder="Transaction"
+                placeholder="Intitulé"
                 value={transaction}
                 onChange={(e) => setTransaction(e.target.value)}
                 className="w-full h-6 md:h-8 rounded-full bg-white/70 text-xs md:text-sm px-3 outline-none placeholder:text-gray-500"
