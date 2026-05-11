@@ -9,11 +9,15 @@ export function useAlerts() {
   // useCallback [] : la référence est stable entre les renders.
   // Les composants peuvent l'inclure dans leurs deps de useEffect sans boucle infinie.
   const loadAlerts = useCallback(async () => {
-    const data = await fetchAlerts();
-    const unread = data.filter((a) => !a.isRead);
-    if (unread.length > 0) {
-      setAlerts(unread);
-      setCurrentAlertIndex(0);
+    try {
+      const data = await fetchAlerts();
+      const unread = data.filter((a) => !a.isRead);
+      if (unread.length > 0) {
+        setAlerts(unread);
+        setCurrentAlertIndex(0);
+      }
+    } catch {
+      // les alertes sont non-critiques, on ne bloque pas le chargement
     }
   }, []);
 

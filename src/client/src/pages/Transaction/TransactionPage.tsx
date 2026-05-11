@@ -108,9 +108,11 @@ const [footerHeight, setFooterHeight] = useState(0);
       />
 
       {/* Contenu */}
-      <div className="relative z-20 flex flex-col h-full pb-10">
+      <div
+        className="relative z-20 flex flex-col h-full overflow-y-auto scrollbar-hide pb-40 [mask-image:linear-gradient(to_bottom,transparent_0px,transparent_145px,black_162px)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0px,transparent_145px,black_162px)] md:[mask-image:none] md:[-webkit-mask-image:none]"
+      >
         {/* En-tête Solde */}
-        <header className="flex flex-col items-center pt-32 md:pt-10 pb-4 shrink-0">
+        <header className="flex flex-col items-center pt-44 md:pt-10 pb-4 shrink-0">
           <h1 className="text-[35px] md:text-[50px] lg:text-[60px] font-black uppercase leading-none tracking-tighter">
             Accueil
           </h1>
@@ -138,7 +140,7 @@ const [footerHeight, setFooterHeight] = useState(0);
         </header>
 
         {/* Cartes — layout en bulles */}
-        <section className="relative flex-1 flex items-center justify-center">
+        <section className="relative md:flex-1 flex items-center justify-center">
           {/* Desktop : bulles bien espacées */}
           <div className="hidden md:block relative w-full max-w-4xl h-96">
             <div className="absolute bottom-60 right-12">
@@ -154,7 +156,7 @@ const [footerHeight, setFooterHeight] = useState(0);
 
           {/* Mobile : 2 en haut côte à côte + Budget centré en bas */}
           <div className="flex md:hidden flex-col items-center gap-2 w-full px-2">
-            <div className="flex flex-col min-[400px]:flex-row gap-2 justify-center items-center w-full">
+            <div className="flex flex-col min-[450px]:flex-row gap-2 justify-center items-center w-full">
               <DepenseCard onSuccess={load} />
               <RevenuCard onSuccess={load} />
             </div>
