@@ -15,6 +15,7 @@ import { StatsCards } from "./components/StatsCards";
 import { MonthlyChart } from "./components/MonthlyChart";
 import { TransactionFilters } from "./components/TransactionFilters";
 import { TransactionTable } from "./components/TransactionTable";
+import BudgetHistory from "../../components/Budget/BudgetHistory";
 
 export default function DashboardPage() {
   const { currentAlert, handleCloseAlert, loadAlerts } = useAlerts();
@@ -162,6 +163,8 @@ if (error) {
 
           {/* Même logique : on n'affiche le graphique que si on a des données. */}
           {monthly.length > 0 && <MonthlyChart data={monthly} />}
+
+          <BudgetHistory />
 
           <section className="bg-white/40 backdrop-blur-xl rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/40 mb-10">
             <TransactionFilters
