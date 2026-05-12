@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import {
   fetchTransactions,
   type Transaction,
@@ -15,6 +15,7 @@ import { StatsCards } from "./components/StatsCards";
 import { MonthlyChart } from "./components/MonthlyChart";
 import { TransactionFilters } from "./components/TransactionFilters";
 import { TransactionTable } from "./components/TransactionTable";
+import TransactionSheet from "../../components/TransactionList/TransactionSheet";
 
 export default function DashboardPage() {
   const { currentAlert, handleCloseAlert, loadAlerts } = useAlerts();
@@ -37,6 +38,35 @@ export default function DashboardPage() {
   // --- Etats de chargement et gestion des erreurs
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // --- Sélection de catégories pour affichage avancé des transactions
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const toggleCategory = (id: number) => {
+  setSelectedCategories(prev =>
+    prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+  );
+};
+
+  // --- Logique de filtrage des transactions pour le tableau et la sheet. 
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((t) => {
+      // Filtre par type
+      const matchesType = filterType === "ALL" || t.category.type === filterType;
+      // Filtre par recherche texte
+      const matchesSearch = !search.trim() || 
+        t.description?.toLowerCase().includes(search.toLowerCase()) ||
+        t.category.name.toLowerCase().includes(search.toLowerCase());
+      // Filtre par date
+      const transactionDate = new Date(t.date).getTime();
+      const matchesStart = !startDate || transactionDate >= new Date(startDate).getTime();
+      const matchesEnd = !endDate || transactionDate <= new Date(endDate).getTime();
+      // Filtre par catégorie sélectionnée
+      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(t.category.id);
+      return matchesType && matchesSearch && matchesStart && matchesEnd && matchesCategory;
+    });
+  }, [transactions, search, filterType, startDate, endDate, selectedCategories]);
+      
+  
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -75,17 +105,21 @@ export default function DashboardPage() {
     return () => observer.disconnect();
   }, []);
 
+  
+
   // Filtrage des transactions pour le tableau.
   // Simple .filter() inline — pas besoin de useMemo pour ce volume de données.
   const filtered = transactions.filter((t) => {
-    if (filterType !== "ALL" && t.category.type !== filterType) return false;
-    if (search && !t.description?.toLowerCase().includes(search.toLowerCase()))
-      return false;
-    const d = new Date(t.date).getTime();
-    if (startDate && d < new Date(startDate).getTime()) return false;
-    if (endDate && d > new Date(endDate).getTime()) return false;
-    return true;
+  if (filterType !== "ALL" && t.category.type !== filterType) return false;
+  if (search && !t.description?.toLowerCase().includes(search.toLowerCase()))
+   return false;
+  const d = new Date(t.date).getTime();
+  if (startDate && d < new Date(startDate).getTime()) return false;
+  if (endDate && d > new Date(endDate).getTime()) return false;
+  return true;
   });
+
+  
 
 if (loading) {
   return (
@@ -102,18 +136,6 @@ if (error) {
     </main>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   return (
@@ -173,8 +195,13 @@ if (error) {
               onStartDateChange={setStartDate}
               endDate={endDate}
               onEndDateChange={setEndDate}
+              selectedCategories={selectedCategories}
+              onCategoryToggle={toggleCategory}
+              onResetCategories={() => setSelectedCategories([])}
+              transactions={transactions}
             />
             <TransactionTable transactions={filtered} />
+            
           </section>
         </div>
       </div>
@@ -186,6 +213,13 @@ if (error) {
           onClose={handleCloseAlert}
         />
       )}
+
+      <TransactionSheet 
+        transactions={filteredTransactions} 
+        footerHeight={footerHeight} 
+      />
+
+      
 
       <footer
         ref={footerRef}

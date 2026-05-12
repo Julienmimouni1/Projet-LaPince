@@ -1,3 +1,5 @@
+import {useState, useMemo} from "react";
+import { type Transaction } from "../../../services/transactionApi";
 /**
  * Interface listant toutes les props de filtrage.
  * On utilise le pattern "Lifting State Up" : les états sont gérés par le parent
@@ -12,6 +14,10 @@ interface TransactionFiltersProps {
   onStartDateChange: (val: string) => void;
   endDate: string;
   onEndDateChange: (val: string) => void;
+  selectedCategories: number[];
+  onCategoryToggle: (id: number) => void;
+  onResetCategories: () => void;
+  transactions: Transaction[]; // Nécessaire pour afficher la liste des catégories disponibles
 }
 
 export function TransactionFilters({
@@ -19,7 +25,20 @@ export function TransactionFilters({
   filterType, onFilterTypeChange,
   startDate, onStartDateChange,
   endDate, onEndDateChange,
+  selectedCategories,
+  onCategoryToggle,
+  onResetCategories,
+  transactions
 }: TransactionFiltersProps) {
+
+  const [ isMenuOpen, setIsMenuOpen ] = useState(false);
+
+  const availableCategories = useMemo(() => {
+    if(!transactions) return [];
+    const cats = new Map<number, any>();
+    transactions.forEach(t => cats.set(t.category.id, t.category));
+    return Array.from(cats.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [transactions]);
 
   // "as const" verrouille les types en littéraux ("ALL", "INCOME", "EXPENSE")
   // sans ça, TypeScript infère string et refuse le passage à onFilterTypeChange
@@ -63,7 +82,41 @@ export function TransactionFilters({
             ))}
           </div>
 
-          {/* Période */}
+    
+            {/* Bouton catégories */}
+            <div className="relative">
+              <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className={`px-4 py-2 rounded-full border text-sm font-bold transition-all ${
+            selectedCategories.length > 0 ? "bg-[#002b49] text-white" : "bg-white/50 border-gray-300"
+          }`}
+        >
+          Catégories {selectedCategories.length > 0 && `(${selectedCategories.length})`}
+        </button>
+
+        {isMenuOpen && (
+          <div className="absolute top-full mt-2 left-0 w-64 bg-white border border-gray-200 shadow-xl rounded-2xl z-50 p-2">
+            <div className="flex justify-between p-2 border-b mb-2">
+              <span className="text-xs font-bold opacity-50">FILTRER</span>
+              <button onClick={onResetCategories} className="text-xs text-red-500 font-bold">Reset</button>
+            </div>
+            <div className="max-h-60 overflow-y-auto">
+              {availableCategories.map(cat => (
+                <label key={cat.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(cat.id)}
+                    onChange={() => onCategoryToggle(cat.id)}
+                    className="accent-[#002b49]"
+                  />
+                  <span className="text-sm">{cat.name}</span>
+                </label>
+              ))}
+            </div>
+        </div>
+        )}
+      </div>
+      {/* Période */}
           <div className="flex items-center gap-2 bg-white/30 px-5 py-2.5 rounded-full border border-white/20 shadow-sm">
             <span className="text-xs font-black uppercase opacity-60">Du</span>
             <input
@@ -80,9 +133,8 @@ export function TransactionFilters({
               onChange={(e) => onEndDateChange(e.target.value)}
             />
           </div>
-
-        </div>
-      </div>
+    </div>
+    </div>
     </div>
   );
 }
