@@ -27,30 +27,30 @@ export default function PrivateLayout() {
 
   return (
     <>
-      {/* MOBILE < md : déconnexion en haut, avatar + nom côte à côte en dessous */}
-      <div className="md:hidden fixed top-4 right-4 z-[60] flex flex-col items-end gap-2">
-        <LogoutButton />
+      {/* MOBILE < md : avatar + nom + déconnexion alignés à l'horizontale */}
+      <div className="md:hidden fixed top-4 right-4 z-[60] flex items-center gap-2">
         <div className="flex items-center gap-2">
           {avatar("w-9 h-9")}
           {namePill("text-xs", "px-4", "py-2")}
         </div>
-      </div>
-
-      {/* TABLETTE md → lg : avatar moyen + nom, position ajustée */}
-      <div className="hidden md:flex lg:hidden fixed top-6 right-40 z-[60] items-center gap-3">
-        {avatar("w-12 h-12")}
-        {namePill("text-xs", "px-4", "py-2")}
-      </div>
-      <div className="hidden md:block lg:hidden fixed top-6 right-4 z-[60]">
         <LogoutButton />
       </div>
 
-      {/* DESKTOP lg+ : grand avatar + nom, déconnexion tout à droite */}
-      <div className="hidden lg:flex fixed top-10 right-50 z-[60] items-center gap-4">
-        {avatar("w-16 h-16")}
-        {namePill("text-sm", "px-6", "py-2.5")}
+      {/* TABLETTE md → lg : avatar moyen + nom + déconnexion alignés */}
+      <div className="hidden md:flex lg:hidden fixed top-6 right-6 z-[60] items-center gap-4">
+        <div className="flex items-center gap-3">
+          {avatar("w-12 h-12")}
+          {namePill("text-xs", "px-4", "py-2")}
+        </div>
+        <LogoutButton />
       </div>
-      <div className="hidden lg:block fixed top-10 right-6 z-[60]">
+
+      {/* DESKTOP lg+ : grand avatar + nom + déconnexion alignés */}
+      <div className="hidden lg:flex fixed top-10 right-10 z-[60] items-center gap-6">
+        <div className="flex items-center gap-4">
+          {avatar("w-16 h-16")}
+          {namePill("text-sm", "px-6", "py-2.5")}
+        </div>
         <LogoutButton />
       </div>
 
