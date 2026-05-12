@@ -27,46 +27,71 @@ export default function DashboardPage() {
   const [monthly, setMonthly] = useState<MonthlyEntry[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  // --- États des filtres (gérés en local, pas besoin d'API) ---
+  // --- États des filtres ---
   const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState<"ALL" | "INCOME" | "EXPENSE">(
-    "ALL",
-  );
+  const [filterType, setFilterType] = useState<"ALL" | "INCOME" | "EXPENSE">("ALL");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // --- Etats de chargement et gestion des erreurs
+  // --- Etats de chargement et gestion des erreurs ---
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // --- Sélection de catégories pour affichage avancé des transactions
+  // --- Sélection de catégories ---
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  const toggleCategory = (id: number) => {
-  setSelectedCategories(prev =>
-    prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
-  );
-};
 
-  // --- Logique de filtrage des transactions pour le tableau et la sheet. 
+  // --- 1. Logique de filtrage  ---
   const filteredTransactions = useMemo(() => {
     return transactions.filter((t) => {
-      // Filtre par type
       const matchesType = filterType === "ALL" || t.category.type === filterType;
-      // Filtre par recherche texte
       const matchesSearch = !search.trim() || 
         t.description?.toLowerCase().includes(search.toLowerCase()) ||
         t.category.name.toLowerCase().includes(search.toLowerCase());
-      // Filtre par date
       const transactionDate = new Date(t.date).getTime();
       const matchesStart = !startDate || transactionDate >= new Date(startDate).getTime();
       const matchesEnd = !endDate || transactionDate <= new Date(endDate).getTime();
-      // Filtre par catégorie sélectionnée
       const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(t.category.id);
       return matchesType && matchesSearch && matchesStart && matchesEnd && matchesCategory;
     });
   }, [transactions, search, filterType, startDate, endDate, selectedCategories]);
-      
-  
+
+  // --- 2. Recalcul des Stats dynamiques (pour les StatsCards) ---
+  const filteredOverview = useMemo(() => {
+    const income = filteredTransactions
+      .filter(t => t.category.type === "INCOME")
+      .reduce((acc, t) => acc + Number(t.amount), 0);
+    
+    const expenses = filteredTransactions 
+      .filter(t => t.category.type === "EXPENSE")
+      .reduce((acc, t) => acc + Number(t.amount), 0);
+    
+    return { 
+      income, 
+      expenses, 
+      balance: income - expenses 
+    };
+  }, [filteredTransactions]);
+
+  // --- 3. Recalcul du Graphique dynamique (pour le MonthlyChart) ---
+  const filteredMonthly = useMemo(() => {
+    const monthlyMap: Record<string, { name: string; income: number; expense: number }> = {};
+    [...filteredTransactions]
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .forEach((t) => {
+        const month = new Date(t.date).toLocaleString("fr-FR", { month: "short" });
+        if (!monthlyMap[month]) monthlyMap[month] = { name: month, income: 0, expense: 0 };
+        const amount = Number(t.amount);
+        if (t.category.type === "INCOME") monthlyMap[month].income += amount;
+        else monthlyMap[month].expense += amount;
+      });
+    return Object.values(monthlyMap) as MonthlyEntry[];
+  }, [filteredTransactions]);
+
+  const toggleCategory = (id: number) => {
+    setSelectedCategories(prev =>
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    );
+  };
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -94,8 +119,6 @@ export default function DashboardPage() {
     return () => window.removeEventListener("transaction:created", loadData);
   }, [loadData]);
 
-  // ResizeObserver sur le footer : ajuste le padding-bottom du scroll
-  // pour que le dernier bloc ne passe pas derrière le footer fixe.
   useEffect(() => {
     if (!footerRef.current) return;
     const observer = new ResizeObserver(() => {
@@ -105,41 +128,23 @@ export default function DashboardPage() {
     return () => observer.disconnect();
   }, []);
 
-  
+  if (loading) {
+    return (
+      <main className="fixed inset-0 flex items-center justify-center bg-[#cbd5e1]">
+        <p className="text-[#002b49] font-black text-xl animate-pulse">Chargement…</p>
+      </main>
+    );
+  }
 
-  // Filtrage des transactions pour le tableau.
-  // Simple .filter() inline — pas besoin de useMemo pour ce volume de données.
-  const filtered = transactions.filter((t) => {
-  if (filterType !== "ALL" && t.category.type !== filterType) return false;
-  if (search && !t.description?.toLowerCase().includes(search.toLowerCase()))
-   return false;
-  const d = new Date(t.date).getTime();
-  if (startDate && d < new Date(startDate).getTime()) return false;
-  if (endDate && d > new Date(endDate).getTime()) return false;
-  return true;
-  });
-
-  
-
-if (loading) {
-  return (
-    <main className="fixed inset-0 flex items-center justify-center bg-[#cbd5e1]">
-      <p className="text-[#002b49] font-black text-xl animate-pulse">Chargement…</p>
-    </main>
-  );
-}
-
-if (error) {
-  return (
-    <main className="fixed inset-0 flex items-center justify-center bg-[#cbd5e1]">
-      <p className="text-red-600 font-bold text-lg">{error}</p>
-    </main>
-  );
-}
-
+  if (error) {
+    return (
+      <main className="fixed inset-0 flex items-center justify-center bg-[#cbd5e1]">
+        <p className="text-red-600 font-bold text-lg">{error}</p>
+      </main>
+    );
+  }
 
   return (
-    
     <main className="fixed inset-0 w-full h-full overflow-hidden font-sans text-[#002b49]">
       <AnimatedOrbBackground />
       <img
@@ -153,16 +158,8 @@ if (error) {
         aria-hidden="true"
       />
 
-      <img
-        src="/WEBP/Mobile/Lapince-Logo-Mobile.webp"
-        className="absolute top-6 left-6 w-28 z-[11] md:hidden"
-        alt="Logo"
-      />
-      <img
-        src="/WEBP/Desktop/Lapince-Logo-Desktop.webp"
-        className="absolute top-10 left-15 w-24 lg:w-60 z-[11] transition-all hidden md:block"
-        alt="Logo"
-      />
+      <img src="/WEBP/Mobile/Lapince-Logo-Mobile.webp" className="absolute top-6 left-6 w-28 z-[11] md:hidden" alt="Logo" />
+      <img src="/WEBP/Desktop/Lapince-Logo-Desktop.webp" className="absolute top-10 left-15 w-24 lg:w-60 z-[11] transition-all hidden md:block" alt="Logo" />
 
       <div
         className="relative z-20 flex flex-col h-full overflow-y-auto scrollbar-hide"
@@ -178,12 +175,9 @@ if (error) {
         </header>
 
         <div className="max-w-6xl mx-auto w-full px-6 space-y-8">
-          {/* Rendu conditionnel : overview est null tant que l'API n'a pas répondu.
-              Sans cette garde, toLocaleString() crasherait sur undefined. */}
-          {overview && <StatsCards stats={overview} />}
+          <StatsCards stats={filteredOverview as any} />
 
-          {/* Même logique : on n'affiche le graphique que si on a des données. */}
-          {monthly.length > 0 && <MonthlyChart data={monthly} />}
+          {filteredMonthly.length > 0 && <MonthlyChart data={filteredMonthly} />}
 
           <section className="bg-white/40 backdrop-blur-xl rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/40 mb-10">
             <TransactionFilters
@@ -200,8 +194,7 @@ if (error) {
               onResetCategories={() => setSelectedCategories([])}
               transactions={transactions}
             />
-            <TransactionTable transactions={filtered} />
-            
+            <TransactionTable transactions={filteredTransactions} />
           </section>
         </div>
       </div>
@@ -219,16 +212,11 @@ if (error) {
         footerHeight={footerHeight} 
       />
 
-      
-
       <footer
         ref={footerRef}
         className="absolute bottom-0 left-0 w-full z-[60]"
       >
-        <Footer
-          showIcons
-          activeIds={["transactions", "params"]}
-        />
+        <Footer showIcons activeIds={["transactions", "params"]} />
       </footer>
     </main>
   );
