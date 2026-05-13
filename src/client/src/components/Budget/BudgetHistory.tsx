@@ -1,76 +1,21 @@
-import { useEffect, useState } from "react";
-// Importation du service API pour récupérer les budgets
-import { fetchBudgets } from "../../services/budgetApi";
-// Importation du type Budget pour le typage TypeScript
 import type { Budget } from "../../types/budget";
 
 /**
  * Composant BudgetHistory
  * Affiche la liste des budgets créés par l'utilisateur sous forme d'historique.
+ * Reçoit la liste des budgets en props pour s'aligner sur la logique du Dashboard.
  */
-export default function BudgetHistory() {
-  // État pour stocker la liste des budgets
-  const [budgets, setBudgets] = useState<Budget[]>([]);
-  // État pour gérer le chargement (affiche un indicateur pendant l'appel API)
-  const [loading, setLoading] = useState(true);
-  // État pour stocker un éventuel message d'erreur
-  const [error, setError] = useState<string | null>(null);
+interface BudgetHistoryProps {
+  budgets: Budget[];
+}
 
-  // useEffect s'exécute une seule fois au montage du composant
-  useEffect(() => {
-    async function load() {
-      try {
-        // 1. Appel à l'API pour récupérer tous les budgets de l'utilisateur
-        const data = await fetchBudgets();
-        
-        // 2. Tri des budgets par date de création (createdAt)
-        // On place les plus récents en haut de la liste (ordre décroissant)
-        const sorted = data.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        );
-        
-        // 3. Mise à jour de l'état avec les données triées
-        setBudgets(sorted);
-      } catch (err) {
-        // Gestion de l'erreur si l'appel API échoue
-        setError("Erreur lors du chargement de l'historique.");
-        console.error(err);
-      } finally {
-        // Arrêt de l'indicateur de chargement, peu importe l'issue
-        setLoading(false);
-      }
-    }
-    load();
-  }, []);
-
-  // Affichage pendant le chargement des données
-  if (loading) {
-    return (
-      <div className="p-8 text-center">
-        <p className="text-[#002b49] font-bold animate-pulse">Chargement de l'historique des budgets...</p>
-      </div>
-    );
-  }
-
-  // Affichage en cas d'erreur de récupération
-  if (error) {
-    return (
-      <div className="p-8 text-center">
-        <p className="text-red-500 font-bold">{error}</p>
-      </div>
-    );
-  }
-
-  // Affichage si la liste est vide (aucun budget créé)
-  if (budgets.length === 0) {
-    return (
-      <section className="bg-white/20 backdrop-blur-md rounded-[2.5rem] p-8 text-center border border-white/30">
-        <h3 className="text-xl font-black uppercase tracking-tight mb-2">Historique des budgets</h3>
-        <p className="opacity-60 italic text-sm">Aucun budget enregistré pour le moment.</p>
-      </section>
-    );
-  }
+export default function BudgetHistory({ budgets }: BudgetHistoryProps) {
+  // Tri des budgets par date de création (createdAt)
+  // On place les plus récents en haut de la liste (ordre décroissant)
+  const sorted = [...budgets].sort(
+    (a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
 
   // Rendu principal de la liste des budgets
   return (
@@ -98,7 +43,7 @@ export default function BudgetHistory() {
             </thead>
             {/* Corps du tableau : on boucle sur chaque budget */}
             <tbody className="divide-y divide-white/20">
-              {budgets.map((budget) => (
+              {sorted.map((budget) => (
                 <tr key={budget.id} className="hover:bg-white/20 transition-colors group">
                   {/* Colonne Nom de la catégorie */}
                   <td className="px-6 py-4">

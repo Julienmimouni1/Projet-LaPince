@@ -4,7 +4,9 @@ import {
   type Transaction,
 } from "../../services/transactionApi";
 import { fetchOverview, fetchMonthlyStats } from "../../services/statsApi";
+import { fetchBudgets } from "../../services/budgetApi";
 import type { Overview, MonthlyEntry } from "../../types/stats";
+import type { Budget } from "../../types/budget";
 import { useAlerts } from "../../hooks/useAlerts";
 
 import Footer from "../../components/Footer/footer";
@@ -26,6 +28,7 @@ export default function DashboardPage() {
   const [overview, setOverview] = useState<Overview | null>(null);
   const [monthly, setMonthly] = useState<MonthlyEntry[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [budgets, setBudgets] = useState<Budget[]>([]);
 
   // --- États des filtres (gérés en local, pas besoin d'API) ---
   const [search, setSearch] = useState("");
@@ -43,15 +46,17 @@ export default function DashboardPage() {
     setLoading(true);
     setError(null);
     try {
-      const [trans, ov, mo] = await Promise.all([
+      const [trans, ov, mo, budg] = await Promise.all([
         fetchTransactions(),
         fetchOverview(),
         fetchMonthlyStats(),
+        fetchBudgets(),
         loadAlerts(),
       ]);
       setTransactions(trans.data);
       setOverview(ov);
       setMonthly(mo);
+      setBudgets(budg);
     } catch {
       setError("Impossible de charger les données. Vérifie ta connexion.");
     } finally {
@@ -164,7 +169,8 @@ if (error) {
           {/* Même logique : on n'affiche le graphique que si on a des données. */}
           {monthly.length > 0 && <MonthlyChart data={monthly} />}
 
-          <BudgetHistory />
+          {/* Aligné sur MonthlyChart : on n'affiche l'historique que s'il y a des budgets. */}
+          {budgets.length > 0 && <BudgetHistory budgets={budgets} />}
 
           <section className="bg-white/40 backdrop-blur-xl rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/40 mb-10">
             <TransactionFilters
