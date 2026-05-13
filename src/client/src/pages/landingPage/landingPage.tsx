@@ -118,9 +118,8 @@ export default function LandingPage() {
           </div>
           <section className="space-y-1 w-fit shrink-0 relative z-30">
             {[
-              "<strong>Tout ce qu'il vous faut. Rien de superflu.</strong><br/><span style='display:block;text-align:center'>Notez vos denses à la volée.</span>",
+              "<strong>Tout ce qu'il vous faut. Rien de superflu.</strong><br/><span style='display:block;text-align:center'>Notez vos dépenses et revenus à la volée</span>",
               "<strong>Aussi rapide que d'envoyer un message.</strong><br/><span style='display:block;text-align:center'>Visualisez où va votre argent</span>",
-              "<strong>Des graphiques clairs.</strong><br/><span style='display:block;text-align:center'>On vous prévient avant que ça dérape</span>",
               "<strong>Des alertes intelligentes sur vos budgets.</strong><br/><span style='display:block;text-align:center'>Fixez des budgets par catégorie</span>",
               "<strong>Et tenez-les, on vous aide.</strong>",
             ].map((item, index) => (
