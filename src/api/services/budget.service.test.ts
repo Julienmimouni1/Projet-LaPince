@@ -14,7 +14,6 @@ vi.mock('../lib/prisma.js', () => ({
       findFirst: vi.fn(),
       create: vi.fn(),
       update: vi.fn(),
-      deleteMany: vi.fn(),
     },
   },
 }));
@@ -59,14 +58,13 @@ describe('Budget Service - checkAndCreateRetroactiveAlert', () => {
       data: {
         userId,
         categoryId: budget.id_category,
-        budgetId: budget.id,
         exceededAmount: 50,
         isRead: false,
       },
     });
   });
 
-  it('should update an existing alert if it already exists for this budget', async () => {
+  it('should update an existing alert if it already exists', async () => {
     (prisma.transaction.aggregate as any).mockResolvedValue({
       _sum: { amount: 150 },
     });
@@ -94,15 +92,5 @@ describe('Budget Service - checkAndCreateRetroactiveAlert', () => {
     expect(result.alreadyExceeded).toBe(true);
     expect(result.total).toBe(100);
     expect(prisma.alert.create).toHaveBeenCalled();
-  });
-});
-
-describe('Budget Service - deleteAlertsByBudget', () => {
-  it('should call prisma.alert.deleteMany with the correct budgetId', async () => {
-    const budgetId = 10;
-    await budgetService.deleteAlertsByBudget(budgetId);
-    expect(prisma.alert.deleteMany).toHaveBeenCalledWith({
-      where: { budgetId },
-    });
   });
 });

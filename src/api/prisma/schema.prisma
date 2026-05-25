@@ -90,6 +90,8 @@ model Budget {
   period       PeriodType
   id_category  Int
   userId       Int
+  month        Int?
+  year         Int?
 
   // Relation avec l'utilisateur (un budget appartient à un utilisateur)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

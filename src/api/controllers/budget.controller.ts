@@ -35,7 +35,14 @@ export const createBudget = async (req: Request, res: Response) => {
     // Création du budget
     const budget = await budgetService.createBudget(req.user.id, body.data);
 
-    return res.status(201).json(budget);
+    // Vérification rétroactive des dépenses
+    const retroactiveStatus = await budgetService.checkAndCreateRetroactiveAlert(req.user.id, budget);
+
+    return res.status(201).json({
+      ...budget,
+      alreadyExceeded: retroactiveStatus.alreadyExceeded,
+      currentTotal: retroactiveStatus.total,
+    });
   } catch (error) {
     return res.status(500).json({ message: "Erreur serveur lors de la création du budget" });
   }

@@ -5,6 +5,8 @@ export type Budget = {
   period: "weekly" | "monthly" | "custom";
   id_category: number;
   userId: number;
+  month?: number;
+  year?: number;
   createdAt: string;
   updatedAt: string;
   category: {
@@ -12,12 +14,16 @@ export type Budget = {
     name: string;
     type: "EXPENSE" | "INCOME";
   };
+  alreadyExceeded?: boolean;
+  currentTotal?: number;
 };
 // Type pour créer un budget (body du POST /budgets)
 export type CreateBudgetPayload = {
   limit_amount: number;
   period: "weekly" | "monthly" | "custom";
   id_category: number;
+  month?: number;
+  year?: number;
 };
 
 // Type pour la réponse de GET /budgets/:id/status
