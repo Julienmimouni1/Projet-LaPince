@@ -40,16 +40,30 @@ export default function BudgetCard() {
 
     setIsLoading(true);
     try {
-      await createBudget({
+      const payload: any = {
         limit_amount: amount,
         period: "monthly",
         id_category: categoryId,
-      });
+      };
+
+      if (mois) {
+        const [year, month] = mois.split("-");
+        payload.year = parseInt(year);
+        payload.month = parseInt(month);
+      }
+
+      const response = await createBudget(payload);
+
       setMontant("");
       setMois("");
       setCategorie("");
-      setMessageSuccess("✓ Budget ajouté !");
-      setTimeout(() => setMessageSuccess(null), 3000);
+
+      if (response.alreadyExceeded) {
+        setMessageSuccess(`✓ Budget ajouté !\n⚠ Déjà dépassé (${response.currentTotal}€)`);
+      } else {
+        setMessageSuccess("✓ Budget ajouté !");
+      }
+      setTimeout(() => setMessageSuccess(null), 5000);
     } catch (err) {
       setError("Impossible de créer le budget. Réessaie.");
       console.error(err);
