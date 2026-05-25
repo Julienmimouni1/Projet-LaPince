@@ -68,11 +68,11 @@ export const checkAndCreateRetroactiveAlert = async (userId: number, budget: any
   const isExceeded = total >= budget.limit_amount;
 
   if (isExceeded) {
-    // Vérifier si une alerte existe déjà pour cette catégorie/utilisateur
+    // Vérifier si une alerte existe déjà pour ce budget
     const existingAlert = await prisma.alert.findFirst({
       where: {
         userId,
-        categoryId: budget.id_category,
+        budgetId: budget.id,
       },
     });
 
@@ -88,6 +88,7 @@ export const checkAndCreateRetroactiveAlert = async (userId: number, budget: any
         data: {
           userId,
           categoryId: budget.id_category,
+          budgetId: budget.id,
           exceededAmount,
           isRead: false,
         },
@@ -96,6 +97,15 @@ export const checkAndCreateRetroactiveAlert = async (userId: number, budget: any
   }
 
   return { alreadyExceeded: isExceeded, total };
+};
+
+// -------------------------------------------------------------
+// 3b. Supprimer les alertes obsolètes liées à un budget
+// -------------------------------------------------------------
+export const deleteAlertsByBudget = async (budgetId: number) => {
+  return prisma.alert.deleteMany({
+    where: { budgetId },
+  });
 };
 
 // -------------------------------------------------------------

@@ -3,7 +3,7 @@ import {
   fetchTransactions,
   type Transaction,
 } from "../../services/transactionApi";
-import { fetchBudgets } from "../../services/budgetApi";
+import { fetchBudgets, updateBudget as apiUpdateBudget, deleteBudget as apiDeleteBudget } from "../../services/budgetApi";
 import type { Budget } from "../../types/budget";
 import { useAlerts } from "../../hooks/useAlerts";
 
@@ -20,7 +20,7 @@ import { useStats } from "../../hooks/useStats";
 import type { MonthlyEntry } from "../../types/stats";
 
 export default function DashboardPage() {
-  const { currentAlert, handleCloseAlert } = useAlerts();
+  const { currentAlert, handleCloseAlert, loadAlerts } = useAlerts();
   const footerRef = useRef<HTMLElement>(null);
   const [footerHeight, setFooterHeight] = useState(0);
 
@@ -31,6 +31,14 @@ export default function DashboardPage() {
   // --- AJOUT : seules les transactions restent gérées localement ici ---
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
+
+  // --- États pour la modification/suppression de budget ---
+  const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
+  const [confirmBudgetData, setConfirmBudgetData] = useState<{
+    action: "delete" | "update";
+    payload: any;
+  } | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // --- États des filtres ---
   const [search, setSearch] = useState("");
@@ -250,14 +258,20 @@ export default function DashboardPage() {
           </p>
         </header>
 
-        <div className="max-w-6xl mx-auto w-full px-6 space-y-8">
+        <div className="max-w-screen-2xl mx-auto w-full px-6 space-y-12">
           {displayOverview && <StatsCards stats={displayOverview} />}
           {displayMonthlyData.length > 0 && (
             <MonthlyChart data={displayMonthlyData} />
           )}
 
           {/* Aligné sur MonthlyChart : on n'affiche l'historique que s'il y a des budgets. */}
-          {budgets.length > 0 && <BudgetHistory budgets={budgets} />}
+          {budgets.length > 0 && (
+            <BudgetHistory
+              budgets={budgets}
+              onUpdateRequest={(b) => setEditingBudget(b)}
+              onDeleteRequest={(id) => setConfirmBudgetData({ action: "delete", payload: id })}
+            />
+          )}
 
           <section className="bg-white/40 backdrop-blur-xl rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/40 mb-10">
             <TransactionFilters
@@ -278,6 +292,148 @@ export default function DashboardPage() {
           </section>
         </div>
       </div>
+
+      {successMessage && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] bg-green-600 text-white px-6 py-3 rounded-full font-black shadow-2xl animate-in fade-in slide-in-from-top-4">
+          {successMessage}
+        </div>
+      )}
+
+      {/* Modal de Confirmation (Update/Delete Budget) */}
+      {confirmBudgetData && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[999] backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-8 w-[90%] max-w-[400px] text-center shadow-2xl border border-white/20">
+            <p className="font-black text-2xl text-[#002b49] mb-2 uppercase tracking-tighter">Confirmation</p>
+            <p className="text-sm font-medium opacity-60 mb-8">
+              {confirmBudgetData.action === "delete"
+                ? "Voulez-vous vraiment supprimer ce budget ? Cette action est irréversible."
+                : `Voulez-vous enregistrer les modifications pour ce budget ?`}
+            </p>
+
+            <div className="flex justify-between gap-4">
+              <button
+                className="flex-1 py-3 rounded-2xl bg-gray-100 text-[#002b49] font-black uppercase text-sm hover:bg-gray-200 transition-colors"
+                onClick={() => setConfirmBudgetData(null)}
+              >
+                Annuler
+              </button>
+              <button
+                className={`flex-1 py-3 rounded-2xl text-white font-black uppercase text-sm transition-colors ${
+                  confirmBudgetData.action === "delete" ? "bg-red-600 hover:bg-red-700" : "bg-[#002b49] hover:bg-black"
+                }`}
+                onClick={async () => {
+                  try {
+                    if (confirmBudgetData.action === "delete") {
+                      await apiDeleteBudget(confirmBudgetData.payload);
+                      setSuccessMessage("✓ Budget supprimé");
+                    } else if (confirmBudgetData.action === "update") {
+                      const res = await apiUpdateBudget(confirmBudgetData.payload.id, confirmBudgetData.payload.data);
+                      if (res.alreadyExceeded) {
+                        setSuccessMessage(`✓ Modifié !\n⚠ Dépassé (${res.currentTotal}€)`);
+                      } else {
+                        setSuccessMessage("✓ Budget mis à jour");
+                      }
+                    }
+                    await loadData();
+                    await loadAlerts();
+                    setTimeout(() => setSuccessMessage(null), 5000);
+                  } catch (err) {
+                    console.error(err);
+                  }
+                  setConfirmBudgetData(null);
+                }}
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal d'Édition de Budget */}
+      {editingBudget && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[999] backdrop-blur-sm">
+          <div className="bg-white text-[#002b49] p-8 rounded-[2.5rem] w-[95%] max-w-[400px] shadow-2xl border border-white/20">
+            <h2 className="text-2xl font-black mb-6 uppercase tracking-tighter">Modifier le budget</h2>
+
+            <form
+              className="space-y-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const amount = Number(formData.get("amount"));
+                const period = formData.get("period") as any;
+                const moisRaw = formData.get("mois") as string;
+
+                const payload: any = { limit_amount: amount, period };
+                if (moisRaw) {
+                  const [year, month] = moisRaw.split("-");
+                  payload.year = parseInt(year);
+                  payload.month = parseInt(month);
+                }
+
+                setConfirmBudgetData({
+                  action: "update",
+                  payload: { id: editingBudget.id, data: payload },
+                });
+                setEditingBudget(null);
+              }}
+            >
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-2">Montant (€)</label>
+                <input
+                  type="number"
+                  name="amount"
+                  defaultValue={editingBudget.limit_amount}
+                  required
+                  step="0.01"
+                  className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 font-bold focus:outline-none focus:ring-2 focus:ring-[#002b49]/20"
+                  placeholder="Montant"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-2">Mois / Année</label>
+                <input
+                  type="month"
+                  name="mois"
+                  defaultValue={editingBudget.year && editingBudget.month ? `${editingBudget.year}-${String(editingBudget.month).padStart(2, '0')}` : ""}
+                  className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 font-bold focus:outline-none focus:ring-2 focus:ring-[#002b49]/20"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-2">Période</label>
+                <select
+                  name="period"
+                  defaultValue={editingBudget.period}
+                  className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 font-bold focus:outline-none focus:ring-2 focus:ring-[#002b49]/20 appearance-none"
+                >
+                  <option value="monthly">Mensuel</option>
+                  <option value="weekly">Hebdomadaire</option>
+                  <option value="custom">Personnalisé</option>
+                </select>
+              </div>
+
+              <div className="pt-4 flex flex-col gap-3">
+                <button
+                  type="submit"
+                  className="w-full bg-[#002b49] text-white py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg"
+                >
+                  Enregistrer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditingBudget(null)}
+                  className="w-full bg-gray-100 text-[#002b49] py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-gray-200 transition-all"
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {currentAlert && (
         <AlertPopup

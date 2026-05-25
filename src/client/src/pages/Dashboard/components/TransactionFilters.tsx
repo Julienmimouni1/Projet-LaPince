@@ -61,35 +61,35 @@ export function TransactionFilters({
   }, [isMenuOpen]);
 
   return (
-    <div className="p-4 md:p-6 border-b border-white/20 bg-white/10 space-y-4">
+    <div className="p-6 md:p-10 border-b border-white/20 bg-white/10 space-y-6">
       {/* Header : Titre */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <h3 className="text-lg md:text-xl font-black italic uppercase tracking-tight">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+        <h3 className="text-xl md:text-2xl font-black italic uppercase tracking-tight">
           Détails des opérations
         </h3>
 
         {/* Grille de contrôles responsive */}
-        <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full lg:w-auto justify-start md:justify-end">
+        <div className="flex flex-wrap items-center gap-4 md:gap-6 w-full lg:w-auto justify-start md:justify-end">
           
-          {/* Recherche libre : Pleine largeur sur petit mobile, fixe ensuite */}
-          <div className="w-full sm:w-48 order-1 sm:order-none">
+          {/* Recherche libre */}
+          <div className="w-full sm:w-64 order-1 sm:order-none">
             <input
               type="text"
               placeholder="Rechercher..."
-              className="w-full sm:w-48 px-5 py-2.5 rounded-full bg-white/50 border border-white/20 text-sm font-bold focus:outline-none focus:bg-white/80 transition-all shadow-sm"
+              className="w-full sm:w-64 px-6 py-3.5 rounded-full bg-white/50 border border-white/20 text-base font-bold focus:outline-none focus:bg-white/80 transition-all shadow-sm"
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
 
-          {/* Filtre par type : Groupe de boutons compact */}
-          <div className="flex bg-white/20 p-1 rounded-full border border-white/10">
+          {/* Filtre par type */}
+          <div className="flex bg-white/20 p-1.5 rounded-full border border-white/10">
             {types.map(({ value, label }) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => onFilterTypeChange(value)}
-                className={`px-3 md:px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase transition-all ${
+                className={`px-5 md:px-6 py-2 rounded-full text-xs md:text-sm font-black uppercase transition-all ${
                   filterType === value
                     ? "bg-[#002b49] text-white shadow-md"
                     : "text-[#002b49] hover:bg-white/20"
@@ -100,11 +100,11 @@ export function TransactionFilters({
             ))}
           </div>
 
-          {/* Bouton catégories : Menu déroulant - FIX: flex-none ajouté */}
+          {/* Bouton catégories */}
           <div className="relative flex-none">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`px-4 py-2 rounded-full border text-xs md:text-sm font-bold transition-all shadow-sm min-w-[120px] ${
+              className={`px-6 py-3 rounded-full border text-sm md:text-base font-bold transition-all shadow-sm min-w-[150px] ${
                 selectedCategories.length > 0 
                 ? "bg-[#002b49] text-white border-[#002b49]" 
                 : "bg-white/50 border-white/20 text-[#002b49]"
@@ -114,37 +114,32 @@ export function TransactionFilters({
             </button>
 
             {isMenuOpen && (
-              
               <div 
-                onClick={(e) => e.stopPropagation()} // Empêche le clic de remonter jusqu'à window
-                className="absolute top-full mt-2 right-0 w-64 bg-white border border-gray-200 shadow-2xl rounded-2xl p-2 z-[999] pointer-events-auto"
-                style={{ 
-                  position: 'absolute',
-                  left: 'auto',
-                  margin: 0,
-                 }}>
-                <div className="flex justify-between items-center p-2 border-b border-gray-100 mb-2">
-                  <span className="text-[10px] font-black uppercase opacity-50">Filtrer par catégorie</span>
+                onClick={(e) => e.stopPropagation()}
+                className="absolute top-full mt-2 right-0 w-80 bg-white border border-gray-200 shadow-2xl rounded-[2rem] p-4 z-[999] pointer-events-auto"
+              >
+                <div className="flex justify-between items-center p-3 border-b border-gray-100 mb-2">
+                  <span className="text-xs font-black uppercase opacity-50">Filtrer par catégorie</span>
                   <button 
                     onClick={(e) => {
-                      e.stopPropagation(); // Empêche la fermeture accidentelle
+                      e.stopPropagation();
                       onResetCategories();
                     }}
-                    className="text-[10px] text-red-500 font-bold uppercase hover:underline"
+                    className="text-xs text-red-500 font-bold uppercase hover:underline"
                   >
                     Reset
                   </button>
                 </div>
-                <div className="max-h-60 overflow-y-auto scrollbar-hide">
+                <div className="max-h-80 overflow-y-auto scrollbar-hide space-y-1">
                   {availableCategories.map(cat => (
-                    <label key={cat.id} className="flex items-center gap-3 p-2.5 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors">
+                    <label key={cat.id} className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-2xl cursor-pointer transition-colors">
                       <input
                         type="checkbox"
                         checked={selectedCategories.includes(cat.id)}
                         onChange={() => onCategoryToggle(cat.id)}
-                        className="w-4 h-4 rounded border-gray-300 text-[#002b49] focus:ring-[#002b49]"
+                        className="w-5 h-5 rounded border-gray-300 text-[#002b49] focus:ring-[#002b49]"
                       />
-                      <span className="text-sm font-medium text-[#002b49]">{cat.name}</span>
+                      <span className="text-base font-medium text-[#002b49]">{cat.name}</span>
                     </label>
                   ))}
                 </div>
@@ -152,19 +147,19 @@ export function TransactionFilters({
             )}
           </div>
 
-          {/* Période : S'adapte en colonne sur très petit écran, ligne sinon */}
-          <div className="flex items-center gap-2 bg-white/30 px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-white/20 shadow-sm w-full sm:w-auto justify-center">
-            <span className="text-[10px] font-black uppercase opacity-40">Du</span>
+          {/* Période */}
+          <div className="flex items-center gap-4 bg-white/30 px-6 py-3 rounded-full border border-white/20 shadow-sm w-full sm:w-auto justify-center">
+            <span className="text-xs font-black uppercase opacity-40">Du</span>
             <input
               type="date"
-              className="bg-transparent text-[10px] md:text-xs font-bold outline-none cursor-pointer text-[#002b49]"
+              className="bg-transparent text-sm font-bold outline-none cursor-pointer text-[#002b49]"
               value={startDate}
               onChange={(e) => onStartDateChange(e.target.value)}
             />
-            <span className="text-[10px] font-black uppercase opacity-40">Au</span>
+            <span className="text-xs font-black uppercase opacity-40">Au</span>
             <input
               type="date"
-              className="bg-transparent text-[10px] md:text-xs font-bold outline-none cursor-pointer text-[#002b49]"
+              className="bg-transparent text-sm font-bold outline-none cursor-pointer text-[#002b49]"
               value={endDate}
               onChange={(e) => onEndDateChange(e.target.value)}
             />
