@@ -31,85 +31,12 @@ export const createBudget = async (userId: number, data: any) => {
       id_category: data.id_category,
       limit_amount: data.limit_amount,
       period: data.period,
-      month: data.month,
-      year: data.year,
     },
   });
 };
 
 // -------------------------------------------------------------
-// 3. Vérifier rétroactivement les dépenses pour un nouveau budget
-// -------------------------------------------------------------
-export const checkAndCreateRetroactiveAlert = async (userId: number, budget: any) => {
-  // Si le budget n'a pas de mois/année, on ne peut pas faire de check rétroactif précis
-  if (!budget.month || !budget.year) return { alreadyExceeded: false, total: 0 };
-
-  // Calculer la période
-  const startDate = new Date(budget.year, budget.month - 1, 1);
-  const endDate = new Date(budget.year, budget.month, 1);
-
-  // Récupérer la somme des dépenses existantes pour cette catégorie/période
-  const existingTotal = await prisma.transaction.aggregate({
-    _sum: { amount: true },
-    where: {
-      userId: userId,
-      categoryId: budget.id_category,
-      category: {
-        type: 'EXPENSE'
-      },
-      date: {
-        gte: startDate,
-        lt: endDate,
-      },
-    },
-  });
-
-  const total = Number(existingTotal._sum.amount ?? 0);
-  const isExceeded = total >= budget.limit_amount;
-
-  if (isExceeded) {
-    // Vérifier si une alerte existe déjà pour ce budget
-    const existingAlert = await prisma.alert.findFirst({
-      where: {
-        userId,
-        budgetId: budget.id,
-      },
-    });
-
-    const exceededAmount = total - budget.limit_amount;
-
-    if (existingAlert) {
-      await prisma.alert.update({
-        where: { id: existingAlert.id },
-        data: { isRead: false, exceededAmount },
-      });
-    } else {
-      await prisma.alert.create({
-        data: {
-          userId,
-          categoryId: budget.id_category,
-          budgetId: budget.id,
-          exceededAmount,
-          isRead: false,
-        },
-      });
-    }
-  }
-
-  return { alreadyExceeded: isExceeded, total };
-};
-
-// -------------------------------------------------------------
-// 3b. Supprimer les alertes obsolètes liées à un budget
-// -------------------------------------------------------------
-export const deleteAlertsByBudget = async (budgetId: number) => {
-  return prisma.alert.deleteMany({
-    where: { budgetId },
-  });
-};
-
-// -------------------------------------------------------------
-// 4. Récupérer un budget spécifique par ID
+// 3. Récupérer un budget spécifique par ID
 // -------------------------------------------------------------
 export const getBudgetById = async (id: number, userId: number) => {
   return prisma.budget.findFirst({

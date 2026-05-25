@@ -7,11 +7,9 @@ import type { Budget } from "../../types/budget";
  */
 interface BudgetHistoryProps {
   budgets: Budget[];
-  onUpdateRequest: (b: Budget) => void;
-  onDeleteRequest: (id: number) => void;
 }
 
-export default function BudgetHistory({ budgets, onUpdateRequest, onDeleteRequest }: BudgetHistoryProps) {
+export default function BudgetHistory({ budgets }: BudgetHistoryProps) {
   // Tri des budgets par date de création (createdAt)
   // On place les plus récents en haut de la liste (ordre décroissant)
   const sorted = [...budgets].sort(
@@ -36,12 +34,11 @@ export default function BudgetHistory({ budgets, onUpdateRequest, onDeleteReques
           <table className="w-full text-left border-collapse">
             {/* En-tête du tableau */}
             <thead>
-              <tr className="bg-white/30 text-[#002b49]/60 font-bold text-xs md:text-sm uppercase tracking-[0.2em]">
-                <th className="px-8 py-6">Catégorie</th>
-                <th className="px-8 py-6 text-right">Limite</th>
-                <th className="px-8 py-6 text-center">Période</th>
-                <th className="px-8 py-6 text-right">Créé le</th>
-                <th className="px-8 py-6 text-center">Actions</th>
+              <tr className="bg-white/30 text-[#002b49]/60 font-bold text-[10px] uppercase tracking-[0.2em]">
+                <th className="px-6 py-4">Catégorie</th>
+                <th className="px-6 py-4 text-right">Limite</th>
+                <th className="px-6 py-4">Période</th>
+                <th className="px-6 py-4 text-right">Créé le</th>
               </tr>
             </thead>
             {/* Corps du tableau : on boucle sur chaque budget */}
@@ -49,14 +46,14 @@ export default function BudgetHistory({ budgets, onUpdateRequest, onDeleteReques
               {sorted.map((budget) => (
                 <tr key={budget.id} className="hover:bg-white/20 transition-colors group">
                   {/* Colonne Nom de la catégorie */}
-                  <td className="px-8 py-6">
-                    <span className="font-black text-base md:text-lg text-[#002b49] group-hover:text-black">
+                  <td className="px-6 py-4">
+                    <span className="font-bold text-[#002b49] group-hover:text-black">
                       {budget.category.name}
                     </span>
                   </td>
                   {/* Colonne Montant limite formaté en euros */}
-                  <td className="px-8 py-6 text-right">
-                    <span className="font-black text-xl md:text-2xl text-[#002b49]">
+                  <td className="px-6 py-4 text-right">
+                    <span className="font-black text-lg text-[#002b49]">
                       {budget.limit_amount.toLocaleString("fr-FR", {
                         style: "currency",
                         currency: "EUR",
@@ -64,37 +61,20 @@ export default function BudgetHistory({ budgets, onUpdateRequest, onDeleteReques
                     </span>
                   </td>
                   {/* Colonne Période (affichage lisible du type) */}
-                  <td className="px-8 py-6 text-center">
-                    <span className="text-xs md:text-sm font-black uppercase bg-white/40 px-5 py-2 rounded-full text-[#002b49]/80">
+                  <td className="px-6 py-4">
+                    <span className="text-xs font-bold uppercase bg-white/40 px-3 py-1 rounded-full text-[#002b49]/80">
                       {budget.period === "monthly" ? "Mensuel" : budget.period === "weekly" ? "Hebdo" : "Perso"}
                     </span>
                   </td>
                   {/* Colonne Date de création formatée */}
-                  <td className="px-8 py-6 text-right">
-                    <span className="text-sm md:text-base opacity-60 font-bold">
+                  <td className="px-6 py-4 text-right">
+                    <span className="text-xs opacity-60 font-medium">
                       {new Date(budget.createdAt).toLocaleDateString("fr-FR", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",
                       })}
                     </span>
-                  </td>
-                  {/* Colonne Actions */}
-                  <td className="px-8 py-6 text-center">
-                    <div className="flex items-center justify-center gap-3">
-                      <button
-                        onClick={() => onUpdateRequest(budget)}
-                        className="text-xs md:text-sm font-black uppercase tracking-tighter bg-[#002b49] text-white px-5 py-2 rounded-full hover:bg-black transition-all shadow-md hover:scale-105"
-                      >
-                        Modifier
-                      </button>
-                      <button
-                        onClick={() => onDeleteRequest(budget.id)}
-                        className="text-xs md:text-sm font-black uppercase tracking-tighter bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition-all shadow-md hover:scale-105"
-                      >
-                        Supprimer
-                      </button>
-                    </div>
                   </td>
                 </tr>
               ))}

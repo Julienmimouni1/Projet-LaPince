@@ -136,7 +136,7 @@ export default function TransactionPage() {
           </p>
           <p className="mt-4 leading-none">
             <span className="text-xs font-bold uppercase tracking-widest opacity-60 align-bottom">
-              Solde =&nbsp;
+              Solde *&nbsp;
             </span>
             <span className="text-4xl font-black tracking-tight">
               {" "}

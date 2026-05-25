@@ -35,7 +35,7 @@ export async function createBudget(payload: CreateBudgetPayload): Promise<Budget
 export async function updateBudget(
     id: number,
     data :Partial<CreateBudgetPayload>
-    ): Promise<Budget> {
+    ): Promise<Budget[]> {
         const response = await fetch(`${API_URL}/${id}`, {
             method:"PATCH",
             headers: {  "Content-type" : "application/json"},

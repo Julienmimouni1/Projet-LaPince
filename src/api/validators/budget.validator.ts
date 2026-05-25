@@ -5,8 +5,6 @@ export const createBudgetSchema = z.object({
   limit_amount: z.number().positive(),
   period: z.enum(["weekly", "monthly", "custom"]),
   id_category: z.number().int().positive(),
-  month: z.number().int().min(1).max(12).optional(),
-  year: z.number().int().min(2000).max(2100).optional(),
 });
 
 // Schéma pour PATCH /budgets/:id
@@ -27,7 +25,4 @@ export const updateBudgetSchema = z.object({
     .int("L'identifiant doit être un entier")
     .positive("Catégorie invalide")
     .optional(),
-
-  month: z.number().int().min(1).max(12).optional(),
-  year: z.number().int().min(2000).max(2100).optional(),
 });

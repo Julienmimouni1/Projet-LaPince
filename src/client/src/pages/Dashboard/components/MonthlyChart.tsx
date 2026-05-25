@@ -29,13 +29,13 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
   }
 
   return (
-    <section className="bg-white/50 backdrop-blur-2xl rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-white/50">
-      <header className="mb-10 text-center md:text-left">
-        <h3 className="text-2xl font-black italic uppercase tracking-tight">Analyse Mensuelle</h3>
-        <p className="text-sm font-bold opacity-60">Visualisation des Revenus vs Dépenses par mois</p>
+    <section className="bg-white/50 backdrop-blur-2xl rounded-[2.5rem] p-6 md:p-10 shadow-2xl border border-white/50">
+      <header className="mb-8 text-center md:text-left">
+        <h3 className="text-xl font-black italic uppercase">Analyse Mensuelle</h3>
+        <p className="text-xs font-bold opacity-60">Visualisation des Revenus vs Dépenses par mois</p>
       </header>
 
-      <div className="h-[450px] w-full">
+      <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,43,73,0.1)" />
@@ -45,33 +45,31 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
               tickFormatter={formatMonth}
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#002b49", fontWeight: "bold", fontSize: 14 }}
-              dy={10}
+              tick={{ fill: "#002b49", fontWeight: "bold", fontSize: 12 }}
             />
 
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#002b49", fontWeight: "bold", fontSize: 14 }}
-              dx={-10}
+              tick={{ fill: "#002b49", fontWeight: "bold", fontSize: 12 }}
             />
 
             <Tooltip
               cursor={{ fill: "rgba(255,255,255,0.2)" }}
               contentStyle={{
                 backgroundColor: "rgba(255,255,255,0.9)",
-                borderRadius: "20px",
+                borderRadius: "15px",
                 border: "none",
-                fontWeight: "black",
-                boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)",
+                fontWeight: "bold",
+                boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)",
               }}
             />
 
             <ReferenceLine y={0} stroke="#002b49" strokeOpacity={0.2} />
 
             {/* name= sert à l'infobulle : sans ça, elle afficherait "income" et "expenses" en anglais */}
-            <Bar dataKey="income"   name="Revenus"  fill="#10b981" radius={[8, 8, 0, 0]} barSize={35} />
-            <Bar dataKey="expenses" name="Dépenses" fill="#ef4444" radius={[0, 0, 8, 8]} barSize={35} />
+            <Bar dataKey="income"   name="Revenus"  fill="#10b981" radius={[6, 6, 0, 0]} barSize={20} />
+            <Bar dataKey="expenses" name="Dépenses" fill="#ef4444" radius={[0, 0, 6, 6]} barSize={20} />
           </BarChart>
         </ResponsiveContainer>
       </div>
