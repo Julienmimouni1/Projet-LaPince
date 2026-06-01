@@ -127,7 +127,7 @@ export function TransactionFilters({
                     }}
                     className="text-xs text-red-500 font-bold uppercase hover:underline"
                   >
-                    Reset
+                    Réinitialiser
                   </button>
                 </div>
                 <div className="max-h-80 overflow-y-auto scrollbar-hide space-y-1">
