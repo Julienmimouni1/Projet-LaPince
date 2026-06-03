@@ -31,20 +31,9 @@ RUN npm run build
 
 
 # ===== Deuxième step : conteneur NGinx qui sert le dist ======
-
-# Image de base 
-# Pas besoin de donner un nom à l'étape puisque c'est la dernière
 FROM nginx:alpine
-
-# Supprimer ce qui se trouve dans le dossier que sert Nginx (/user/share/nginx/html)
 RUN rm -rf /usr/share/nginx/html/*
-
-# Remplacer par ce qui se trouve dans notre dossier `/dist` de l'étape précédente
-# --from permet de copier le dossier dist de l'étape précédente que l'on a nommé "builder"
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Documentation : Nginx expose sur le port 80 dans le conteneur
-EXPOSE 80 
-
-# Commande qui se lance au démarrage du conteneur
+COPY nginx.conf /etc/nginx/conf.d/default.conf   
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

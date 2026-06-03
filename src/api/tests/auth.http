@@ -1,0 +1,111 @@
+@baseUrl = http://localhost:3007
+
+### 1. Inscription valide
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "first_name": "Julien",
+  "last_name": "Pourletest",
+  "email": "pourletest@example.com",
+  "password": "Pierre123!motdepasse",
+  "photo": "url"
+}
+
+### 2. Email déjà utilisé → 409
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "first_name": "Alice",
+  "last_name": "Dupont",
+  "email": "alice@example.com",
+  "password": "motdepasse123"
+}
+
+### 3. Email invalide → 400
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "first_name": "Bob",
+  "last_name": "Martin",
+  "email": "pas-un-email",
+  "password": "motdepasse123"
+}
+
+### 4. Mot de passe trop court → 400
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "first_name": "Bob",
+  "last_name": "Martin",
+  "email": "bob@example.com",
+  "password": "court"
+}
+
+### 5. Champs manquants → 400
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "incomplet@example.com",
+  "password": "motdepasse123"
+}
+
+### 6. Connexion valide
+POST {{baseUrl}}/auth/login
+Content-Type: application/json  
+
+{
+  "email": "pourletest@example.com",
+  "password": "Pierre123!motdepasse"
+}
+
+### 7. Email non trouvé → 401
+POST {{baseUrl}}/auth/login
+Content-Type: application/json  
+
+{
+  "email": "jean@example.com",
+  "password": "testMotdepasse123"
+}
+
+### 8. Mot de passe incorrect → 401
+POST {{baseUrl}}/auth/login
+Content-Type: application/json  
+
+{
+  "email": "pierre@example.com",
+  "password": "mauvaismotdepasse"
+}
+
+### 9. Champs manquants → 400
+POST {{baseUrl}}/auth/login
+Content-Type: application/json  
+
+{
+  "email": "pierre@example.com"
+}   
+
+### 10. Refresh token valide
+POST {{baseUrl}}/auth/refresh 
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzM3MjAwNCwiZXhwIjoxNzc3OTc2ODA0LCJhdWQiOiJyZWZyZXNoIn0.rMqdAhpkPtpM4e3IkrwscHNQLk4fuRI4rXQqSmWOiQA"
+} 
+
+### 11. Refresh token invalide → 401
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json  
+
+{
+  "refreshToken": "tokenInvalide"
+}
+
+### 12. Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzQ2NTUxMywiZXhwIjoxNzc3NDY2NDEzLCJhdWQiOiJhY2Nlc3MifQ.F7bKWKJ5WPxJcSBPiGrR2aZL3MVshsToHfT4RXm_flM
+Content-Type: application/json

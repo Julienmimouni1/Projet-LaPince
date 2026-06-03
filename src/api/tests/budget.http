@@ -1,0 +1,71 @@
+### -----------------------------------------
+### VARIABLES
+### -----------------------------------------
+@baseUrl = http://localhost:3007
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzkzMjk4MSwiZXhwIjoxNzc3OTMzODgxLCJhdWQiOiJhY2Nlc3MifQ.l970YZrtGFdpySksOo_lhCbbFTLVTZ1dRVJOD1GCxb4
+GET {{baseUrl}}/budgets
+Authorization: {{token}}
+
+### 2. Créer un budget valide
+POST {{baseUrl}}/budgets
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "limit_amount": 300,
+  "period": "monthly",
+  "id_category": 20
+}
+
+### 3. Créer un budget avec données invalides → 400
+POST {{baseUrl}}/budgets
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "limit_amount": -50,
+  "period": "unknown",
+  "id_category": "abc"
+}
+
+### 4. Récupérer un budget par ID
+GET {{baseUrl}}/budgets/10
+Authorization: {{token}}
+
+### 5. Récupérer un budget inexistant → 404
+GET {{baseUrl}}/budgets/9999
+Authorization: {{token}}
+
+### 6. Mettre à jour un budget
+PATCH {{baseUrl}}/budgets/1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "limit_amount": 500
+}
+
+### 7. Mettre à jour un budget inexistant → 404
+PATCH {{baseUrl}}/budgets/9999
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "limit_amount": 500
+}
+
+### 8. Supprimer un budget
+DELETE {{baseUrl}}/budgets/1
+Authorization: {{token}}
+
+### 9. Supprimer un budget inexistant → 404
+DELETE {{baseUrl}}/budgets/9999
+Authorization: {{token}}
+
+### 10. Statut d'un budget
+GET {{baseUrl}}/budgets/1/status
+Authorization: {{token}}
+
+### 11. Statut d'un budget inexistant → 404
+GET {{baseUrl}}/budgets/9999/status
+Authorization: {{token}}

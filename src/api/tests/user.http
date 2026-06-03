@@ -1,0 +1,52 @@
+@baseUrl = http://localhost:3007
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiY3ludGhpYUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NzQ5MTg0MCwiZXhwIjoxNzc3NDkyNzQwLCJhdWQiOiJhY2Nlc3MifQ.1Yxv-G0vipV6nyratjcD8tVYcrOtKRUJYtpNOsTDLNw
+
+### 1. Récupérer son profil → 200
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{accessToken}}
+
+### 2. Récupérer son profil sans token → 401
+GET {{baseUrl}}/users/me
+
+### 3. Mise à jour du prénom → 200
+PATCH {{baseUrl}}/users/me
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "first_name": "Jean-Pierre"
+}
+
+### 4. Mise à jour de l'email avec un email déjà pris → 409
+PATCH {{baseUrl}}/users/me
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "email": "pierre@example.com"
+}
+
+### 5. Mot de passe invalide (pas de majuscule) → 400
+PATCH {{baseUrl}}/users/me
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "password": "motdepasse123!"
+}
+
+### 6. Mise à jour du mot de passe valide → 200
+PATCH {{baseUrl}}/users/me
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "password": "NouveauMdp123!"
+}
+
+### 7. Supprimer son compte → 200
+DELETE {{baseUrl}}/users/me
+Authorization: Bearer {{accessToken}}
+
+### 8. Supprimer son compte sans token → 401
+DELETE {{baseUrl}}/users/me

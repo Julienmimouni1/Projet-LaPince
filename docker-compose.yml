@@ -1,63 +1,105 @@
 services:
+
+  # --- Base de données PostgreSQL ---
   db:
     image: postgres:17
-    restart: unless-stopped
+    restart: unless-stopped  # Redémarre automatiquement sauf si arrêt manuel
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}         # Nom d'utilisateur (depuis .env)
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Mot de passe (depuis .env)
+      POSTGRES_DB: ${POSTGRES_DB}             # Nom de la base de données
     ports:
-      - "${POSTGRES_LOCAL_PORT}:5432"
+      - "${POSTGRES_LOCAL_PORT}:5432"  # Expose Postgres sur le port local défini dans .env
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data  # Persiste les données entre les redémarrages
     healthcheck:
+      # Vérifie que Postgres est prêt à accepter des connexions avant de démarrer les autres services
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
+      interval: 10s     # Vérifie toutes les 10 secondes
+      timeout: 5s       # Échoue si la réponse prend plus de 5s
+      retries: 5        # 5 tentatives avant de considérer le service comme "unhealthy"
+      start_period: 20s # Laisse 20s au démarrage avant de commencer les vérifications
 
+  # --- API Node.js (backend) ---
   api:
     build:
       context: ./src/api
-      dockerfile: api.Dockerfile
+      dockerfile: api.dev.Dockerfile  # Dockerfile de dev : lance tsx --watch (hot reload)
     environment:
-      NODE_ENV: ${NODE_ENV}
-      DATABASE_URL: ${DATABASE_URL}
-      PORT: ${API_PORT}
-      JWT_SECRET: ${JWT_SECRET}
-      CORS_ORIGIN: ${CORS_ORIGIN}
+      NODE_ENV: ${NODE_ENV}           # production | development
+      DATABASE_URL: ${DATABASE_URL}   # URL de connexion à Postgres
+      PORT: ${API_PORT}               # Port interne sur lequel l'API écoute
+      JWT_SECRET: ${JWT_SECRET}       # Clé secrète pour signer les tokens JWT
+      CORS_ORIGIN: ${CORS_ORIGIN}     # Origine autorisée pour les requêtes CORS
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS} # Liste des origines autorisées pour les requêtes CORS (séparées par des virgules)
     ports:
-      - "${API_LOCAL_PORT}:${API_PORT}"
+      - "${API_LOCAL_PORT}:${API_PORT}"  # Mappe le port local vers le port interne de l'API
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy  # Démarre l'API seulement quand Postgres est prêt
+    develop:
+      watch:
+        # Synchronise les fichiers source dans le conteneur sans rebuild (tsx --watch détecte le changement)
+        - action: sync
+          path: ./src/api/src
+          target: /app/src
+        - action: sync
+          path: ./src/api/middlewares
+          target: /app/middlewares
+        - action: sync
+          path: ./src/api/controllers
+          target: /app/controllers
+        - action: sync
+          path: ./src/api/lib
+          target: /app/lib
+        - action: sync
+          path: ./src/api/routes
+          target: /app/routes
+        # Reconstruit l'image si les dépendances ou le schéma Prisma changent
+        - action: rebuild
+          path: ./src/api/package.json
+        - action: rebuild
+          path: ./src/api/prisma.config.js #test pour le fichier seed
+        - action: rebuild
+          path: ./src/api/prisma/schema.prisma
 
+  # --- Client React/Vite (frontend) ---
   client:
     build:
       context: ./src/client
-      dockerfile: client.Dockerfile
-    restart: unless-stopped
-    ports:
-      - "${CLIENT_LOCAL_PORT}:80"
-    depends_on:
-      - api
-    volumes:
-      - /src/node_modules
-
-  studio:
-    image: node:22-slim          # même version que l'api
-    working_dir: /app/src/api
-    volumes:
-      - .:/app
+      dockerfile: client.dev.Dockerfile  # Dockerfile de dev : lance vite --host (hot reload)
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL} # URL de base pour les requêtes API (ex: http://localhost:5173/api, Vite proxy gère le reste)
     ports:
-      - "5555:5555"
-    command: npx --yes prisma studio --port 5555 --browser none
+      - "${CLIENT_LOCAL_PORT}:5173"  # Port 5173 = serveur de dev Vite (pas nginx)
+    depends_on:
+      - api  # Attend que l'API soit démarrée
+    develop:
+      watch:
+        # Synchronise les fichiers source dans le conteneur sans rebuild (Vite HMR détecte le changement)
+        - action: sync
+          path: ./src/client/src
+          target: /app/src
+        # Reconstruit l'image si les dépendances changent
+        - action: rebuild
+          path: ./src/client/package.json
+
+  # --- Prisma Studio (interface visuelle de la base de données) ---
+  studio:
+    image: node:22-slim        # Même version Node que l'API
+    working_dir: /app/src/api  # Se place dans le dossier de l'API pour accéder au schéma Prisma
+    volumes:
+      - .:/app  # Monte tout le projet pour accéder à node_modules et schema.prisma
+    environment:
+      DATABASE_URL: ${DATABASE_URL}  # Connexion à la même base que l'API
+    ports:
+      - "5555:5555"  # Interface Prisma Studio accessible sur http://localhost:5555
+    command: sh -c "apt-get update -y && apt-get install -y openssl && npx --yes prisma studio --port 5555 --browser none"
+    tty: true
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy  # Attend que Postgres soit prêt avant de se connecter
 
+# --- Volumes nommés ---
 volumes:
-  postgres_data:
+  postgres_data:  # Volume persistant pour les données PostgreSQL (survit aux docker compose down)

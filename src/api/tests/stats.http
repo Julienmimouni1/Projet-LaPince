@@ -1,0 +1,26 @@
+### -----------------------------------------
+### VARIABLES
+### -----------------------------------------
+@baseUrl = http://localhost:3007
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoicG91cmxldGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3ODA5OTM3OCwiZXhwIjoxNzc4MTAwMjc4LCJhdWQiOiJhY2Nlc3MifQ.Rzbk2gPFPVjwBij0tKovOCZNR0gLm0ty3PzTVHRUquc
+### 1. Résumé du tableau de bord
+GET {{baseUrl}}/stats/overview
+Authorization: {{token}}
+
+###
+
+### 2. Analyse mensuelle
+GET {{baseUrl}}/stats/monthly
+Authorization: {{token}}
+
+###
+
+### 3. Répartition des dépenses
+GET {{baseUrl}}/stats/categories
+Authorization: {{token}}
+
+###
+
+### 4. Suivi des budgets
+GET {{baseUrl}}/stats/budgets
+Authorization: {{token}}
