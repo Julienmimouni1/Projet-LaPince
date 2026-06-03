@@ -6,12 +6,12 @@
   "scripts": {
     "dev": "tsx --watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/src/index.js",
+    "start": "node dist/index.js",
     "test": "vitest",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "docker:start": "prisma db push && prisma db seed && node dist/src/index.js"
+    "docker:start": "prisma migrate deploy && prisma db seed && node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
+    "pg": "^8.11.3",
     "argon2": "^0.44.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
@@ -35,6 +36,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.6.0",
     "prisma": "^7.7.0",
+    "@types/pg": "^8.11.10",
     "@types/supertest": "^6.0.3",
     "supertest": "^7.1.0",
     "tsx": "^4.21.0",
