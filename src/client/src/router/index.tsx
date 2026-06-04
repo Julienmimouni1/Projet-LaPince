@@ -45,7 +45,7 @@ export const router = createBrowserRouter([
             element: <ParametrePage />,
           },
           {
-            path: "/dashboard",
+            path: "/tableau-de-bord",
             element: <DashboardPage />,
           },
         ],
