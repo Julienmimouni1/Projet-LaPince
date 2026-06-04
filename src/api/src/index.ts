@@ -13,7 +13,7 @@ import statsRoutes from "../routes/stats.routes.js";
 
 // Créer une app Express
 const app = express();
-const PORT = Number(process.env.PORT) || 3007;
+const PORT = Number(process.env.PORT) || 3000;
 
 // Sécuriser les headers HTTP
 app.use(helmet());
