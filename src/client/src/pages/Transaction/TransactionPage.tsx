@@ -310,7 +310,7 @@ export default function TransactionPage() {
         ref={footerRef}
         className="absolute bottom-0 left-0 w-full z-[60]"
       >
-        <Footer showIcons activeIds={["dashboard", "params"]} />
+        <Footer showIcons activeIds={["tableau-de-bord", "parametres"]} />
       </footer>
     </main>
   );

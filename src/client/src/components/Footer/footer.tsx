@@ -40,9 +40,9 @@ export default function Footer({
       src: "/WEBP/Icones/Lapince-profil-icon.webp",
     },
     {
-      id: "dashboard",
-      label: "Dashboard",
-      href: "/dashboard",
+      id: "tableau-de-bord",
+      label: "tableau de bord",
+      href: "/tableau-de-bord",
       src: "/WEBP/Icones/Lapince-dashboard-icon.webp",
     },
     {
