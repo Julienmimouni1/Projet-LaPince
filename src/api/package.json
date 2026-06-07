@@ -18,8 +18,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
+    "@prisma/adapter-pg": "^7.7.0",
     "pg": "^8.11.3",
     "argon2": "^0.44.0",
     "cookie-parser": "^1.4.7",
