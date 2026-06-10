@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "engines": {
-    "node": "22.22.3"
-  },
   "scripts": {
     "dev": "tsx --watch src/index.ts",
     "build": "tsc",
