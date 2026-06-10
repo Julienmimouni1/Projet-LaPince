@@ -50,7 +50,6 @@ describe("Composant TransactionLine", () => {
   });
 
   // --- TESTS DE FORMATAGE VISUEL ---
-
   it("doit formater correctement une dépense (date, montant, description)", () => {
     // ACT : On rend le composant avec les données de dépense
     render(
