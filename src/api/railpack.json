@@ -1,7 +1,5 @@
 {
-  "phases": {
-    "install": {
-      "cmds": ["npm install"]
-    }
+  "install": {
+    "cmd": "npm install"
   }
 }
