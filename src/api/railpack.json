@@ -1,5 +1,4 @@
 {
-  "install": {
-    "cmd": "npm install"
-  }
+  "install": { "cmd": "npm install" },
+  "deploy": { "cmd": "npx prisma migrate deploy && node dist/src/index.js" }
 }

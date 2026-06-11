@@ -3,7 +3,7 @@
   "compilerOptions": {
     // File Layout
 
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
 
     // Environment Settings
@@ -46,5 +46,5 @@
     "skipLibCheck": true
   },
   "typeRoots": ["./src/types", "./node_modules/@types"],
-  "exclude": ["node_modules", "generated", "prisma", "prisma.config.ts"]
+  "exclude": ["node_modules", "generated", "prisma", "prisma.config.ts", "dist", "**/.test.ts", "**/*.spec.ts"]
 }
