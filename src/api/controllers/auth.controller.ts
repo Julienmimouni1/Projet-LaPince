@@ -164,7 +164,7 @@ function setRefreshTokenCookie(res: Response, refreshToken: Token) {
     // Comme en local secure est false, sameSite="none" faisait crasher le cookie. Solution : En local, on utilise "lax" (qui accepte le HTTP), et en prod "none".
     sameSite: config.isProd ? "none" : "lax",
     maxAge: refreshToken.expiresIn,
-    path: config.isProd ? "/api/auth/refresh" : "/auth/refresh",
+    path: "/auth/refresh",
   });
 }
 
@@ -205,7 +205,7 @@ export async function refresh(req: Request, res: Response) {
 
 export async function logoutUser(req: Request, res: Response) {
   res.clearCookie("accessToken");
-  res.clearCookie("refreshToken", { path: config.isProd ? "/api/auth/refresh" : "/auth/refresh" });
+  res.clearCookie("refreshToken", { path: "/auth/refresh" });
   res.clearCookie("sessionExists");
   if (req.user) {
     await prisma.refreshToken.deleteMany({ where: { userId: req.user.id } });
