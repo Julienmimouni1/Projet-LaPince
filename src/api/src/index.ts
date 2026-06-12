@@ -18,15 +18,33 @@ const PORT = Number(process.env.PORT) || 3000;
 // Sécuriser les headers HTTP
 app.use(helmet());
 
-// Autoriser les requêtes cross-origin
+// Origines autorisées : CORS_ORIGIN peut contenir plusieurs URLs séparées par une virgule
+const allowedOrigins = [
+  "http://localhost:5173",
+  ...(process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim()) : []),
+];
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Autoriser les requêtes sans origin (Postman, curl)
+      if (!origin) return callback(null, true);
+      // Autoriser toutes les URLs de preview Vercel du projet
+      if (origin.match(/^https:\/\/projet-la-pince[\w-]*\.vercel\.app$/)) {
+        return callback(null, true);
+      }
+      // Autoriser les origines explicitement listées
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
 
 // Body parser pour récupérer les body "application/json" dans req.body
 app.use(express.json());
