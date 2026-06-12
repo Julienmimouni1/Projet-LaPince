@@ -24,7 +24,7 @@ async function main() {
   { name: 'Aides / Allocations', type: CategoryType.INCOME, color: '#059669', icon: 'HandCoins' },
   { name: 'Cadeaux reçus', type: CategoryType.INCOME, color: '#A7F3D0', icon: 'Gift' },
   { name: 'Prestations de services / Revenus pros', type: CategoryType.INCOME, color: '#047857', icon: 'Briefcase' },
-  { name: 'Remboursements', type: CategoryType.INCOME, icon: 'Undo2' },
+  { name: 'Remboursements', type: CategoryType.INCOME, icon: 'Undo2', color: '#047857' },
   { name: 'Autres revenus', type: CategoryType.INCOME, color: '#34D399', icon: 'CirclePlus' },
 
 
@@ -79,10 +79,14 @@ async function main() {
 ]      
   for (const cat of defaultCategories) {
     await prisma.category.upsert({
-      where:  { name: cat.name },
-      update: { color: cat.color, icon: cat.icon, type: cat.type },
-      create: cat,
-    });
+      where: { name: cat.name },
+        update: {
+        color: cat.color ?? null,  // ✅ undefined → null
+        icon: cat.icon ?? null,    // ✅ au cas où
+        type: cat.type,
+  },  
+  create: cat,
+});
   }
 
   console.log('✅ Seeding terminé');
