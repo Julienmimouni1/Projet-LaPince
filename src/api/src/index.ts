@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-
+import {prisma } from "../lib/prisma.js";
 import authRouter from "../routes/auth.routes.js";
 import userRouter from "../routes/user.routes.js";
 import categoryRouter from "../routes/category.routes.js";
@@ -10,10 +10,21 @@ import transactionRouter from "../routes/transaction.routes.js";
 import budgetRoutes from "../routes/budget.routes.js";
 import alertRoutes from "../routes/alert.routes.js";
 import statsRoutes from "../routes/stats.routes.js";
+import { main as seedMain } from "../prisma/seed.js";
 
 // Créer une app Express
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
+
+// ✅ Seed conditionnel
+const seedIfEmpty = async () => {
+  const count = await prisma.category.count();
+  if (count === 0) {
+    // Importe et exécute ton seed
+    await seedMain();
+    console.info("✅ Catégories seedées au démarrage");
+  }
+};
 
 // Sécuriser les headers HTTP
 app.use(helmet());
@@ -67,7 +78,8 @@ app.get("/", (req, res) => {
 export default app;
 
 if (process.env.NODE_ENV !== "test") {
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
+    await seedIfEmpty();
     console.info(`🚀 Server started at http://localhost:${PORT}`);
   });
 }

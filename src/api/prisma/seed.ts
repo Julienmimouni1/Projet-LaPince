@@ -87,13 +87,5 @@ async function main() {
 
   console.log('✅ Seeding terminé');
 }
-main()
-// si c'est un echec, on affiche l'erreur et on arrête tout
-  .catch((e) => {
-    console.error('❌ Seed error:', e);
-    process.exit(1);
-  })
-  //ferme la connexion dans tout les cas
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+
+export {main};
